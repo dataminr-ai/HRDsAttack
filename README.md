@@ -3,6 +3,7 @@ The code to train and evaluate the model on Human Rights Defenders dataset.
 
 # Requirements
 Install the dependencies:
+
 - `python3.8+`
 - `pip3 install -r requirements.txt`
 
@@ -30,6 +31,7 @@ python src/models/few_shot_t5.py \
        --eval_metric average \
        --add_prefix \
        --use_metric
+
 ```
 # Evaluation
 To replicate the reported evaluation results on Human Rights Defenders dev set with paraphrase-based fusion
