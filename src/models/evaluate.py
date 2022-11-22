@@ -46,6 +46,9 @@ if __name__ == "__main__":
                         help='path of output dir')
     parser.add_argument('--replicate', action='store_true',
                         help='replicate the reported scores')
+    parser.add_argument('--fusion', action='store_true',
+                        help='use paragraph-based fusion or not')
+
     args = parser.parse_args()
 
     model_class = T5ForConditionalGeneration
@@ -57,13 +60,20 @@ if __name__ == "__main__":
                                                local_files_only=True)
     model = model_class.from_pretrained(args.model_dir, local_files_only=True)
 
-    test_examples = load_examples(args.test_file, split_doc=True)
-    test_features = generate_features_t5(test_examples, tokenizer,
-                                         add_prefix=args.add_prefix,
-                                         max_len=512,
-                                         context_filter=args.context_filter,
-                                         split_doc=True, top_sentence=None,
-                                         replicate=args.replicate)
+    if args.fusion:
+        test_examples = load_examples(args.test_file, split_doc=True)
+        test_features = generate_features_t5(test_examples, tokenizer,
+                                             add_prefix=args.add_prefix,
+                                             max_len=512,
+                                             context_filter=args.context_filter,
+                                             split_doc=True, top_sentence=None,
+                                             replicate=args.replicate)
+    else:
+        test_examples = load_examples(args.test_file)
+        test_features = generate_features_t5(test_examples, tokenizer,
+                                             add_prefix=args.add_prefix,
+                                             max_len=512,
+                                             context_filter=args.context_filter)
     test_dataset = generate_dataset_t5(test_features)
     test_dataloader = torch.utils.data.DataLoader(
         test_dataset,
@@ -74,11 +84,16 @@ if __name__ == "__main__":
 
     if args.gpu >= 0:
         model.cuda()
-
-    result, test_preds, test_preds_victims = evaluate_all(
-        test_dataloader,
-        test_examples, test_features,
-        tokenizer, model, num_beams=2)
+    if args.fusion:
+        result, test_preds, test_preds_victims = evaluate_all(
+            test_dataloader,
+            test_examples, test_features,
+            tokenizer, model, num_beams=2)
+    else:
+        result, test_preds, test_preds_victims = evaluate_all(
+            test_dataloader,
+            test_examples, test_features,
+            tokenizer, model, num_beams=1)
 
     logger.info(
         f"perpetrator: "
