@@ -1480,7 +1480,6 @@ if __name__ == "__main__":
                     batch_input_ids = batch_input_ids.cuda()
                     batch_input_masks = batch_input_masks.cuda()
                     batch_output_ids = batch_output_ids.cuda()
-                    target_atten_mak_tensor = target_atten_mak_tensor.cuda()
 
                 loss = model(input_ids=batch_input_ids,
                              attention_mask=batch_input_masks,
