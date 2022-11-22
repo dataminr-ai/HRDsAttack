@@ -1,6 +1,7 @@
 import json
 import spacy
 from spacy.cli import download
+from tqdm import tqdm
 
 import logging
 import torch
@@ -247,7 +248,7 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                           'kidnapping', 'killing', 'unknown', 'other',
                           'torture']
     features = []
-    for example_id, example in enumerate(examples):
+    for example_id, example in enumerate(tqdm(examples)):
         raw_context = example['context']
         perpetrator_mention = example['perpetrator_mention']
         victims = example['victims']
@@ -1303,7 +1304,7 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
 
     all_num = 0
 
-    for step, batch in enumerate(dataloader):
+    for step, batch in enumerate(tqdm(dataloader)):
         batch_input_ids, batch_input_masks, \
         batch_output_ids, batch_feature_idx = batch
 
