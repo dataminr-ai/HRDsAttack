@@ -1459,188 +1459,196 @@ if __name__ == "__main__":
                     "batch_size": args.batch_size,
                     "epoch": args.epoch,
                     "lr_decay": args.lr_decay}
+    model.train()
 
-    with mlflow.start_run():
-        optimizer.zero_grad()
-        model.zero_grad()
-        mlflow.set_tag("mlflow.runName", args.run_name)
-        mlflow.log_params(saved_params)
-        for epoch in range(args.epoch):
-            epoch_loss = 0
-            model.train()
-            current_lr = optimizer.param_groups[0]['lr']
-            logger.info(
-                f"Start epoch #{epoch}/{args.epoch} (lr = {current_lr})...")
+    # with mlflow.start_run():
+    optimizer.zero_grad()
+    # model.zero_grad()
+    # mlflow.set_tag("mlflow.runName", args.run_name)
+    # mlflow.log_params(saved_params)
+    for epoch in range(args.epoch):
+        epoch_loss = 0
+        # model.train()
+        current_lr = optimizer.param_groups[0]['lr']
+        logger.info(
+            f"Start epoch #{epoch}/{args.epoch} (lr = {current_lr})...")
 
-            for step, batch in enumerate(train_dataloader):
-                batch_input_ids, batch_input_masks, \
-                batch_output_ids, batch_feature_idx = batch
+        for step, batch in enumerate(train_dataloader):
+            batch_input_ids, batch_input_masks, \
+            batch_output_ids, batch_feature_idx = batch
 
-                if args.gpu >= 0:
-                    batch_input_ids = batch_input_ids.cuda()
-                    batch_input_masks = batch_input_masks.cuda()
-                    batch_output_ids = batch_output_ids.cuda()
+            if args.gpu >= 0:
+                batch_input_ids = batch_input_ids.cuda()
+                batch_input_masks = batch_input_masks.cuda()
+                batch_output_ids = batch_output_ids.cuda()
 
-                loss = model(input_ids=batch_input_ids,
-                             attention_mask=batch_input_masks,
-                             labels=batch_output_ids).loss
+            loss = model(input_ids=batch_input_ids,
+                         attention_mask=batch_input_masks,
+                         labels=batch_output_ids).loss
 
-                if args.gradient_accumulation_steps > 1:
-                    loss = loss / args.gradient_accumulation_steps
+            if args.gradient_accumulation_steps > 1:
+                loss = loss / args.gradient_accumulation_steps
 
-                tr_loss += loss.item()
-                epoch_loss += loss.item()
-                nb_tr_examples += batch_input_ids.size(0)
-                nb_tr_steps += 1
-                loss.backward()
+            tr_loss += loss.item()
+            epoch_loss += loss.item()
+            nb_tr_examples += batch_input_ids.size(0)
+            nb_tr_steps += 1
+            loss.backward()
 
-                # update optimizer every {gradient_accumulation_steps} steps
-                if nb_tr_steps % args.gradient_accumulation_steps == 0:
-                    optimizer.step()
-                    scheduler.step()
-                    optimizer.zero_grad()
-                    model.zero_grad()
-                    global_step += 1
+            # update optimizer every {gradient_accumulation_steps} steps
+            if nb_tr_steps % args.gradient_accumulation_steps == 0:
+                optimizer.step()
+                scheduler.step()
+                optimizer.zero_grad()
+                # model.zero_grad()
+                global_step += 1
 
-                    # do eval on dev every {eval_step} optimizer updates
-                    if global_step % eval_step == 0:
-                        save_model = False
+                # do eval on dev every {eval_step} optimizer updates
+                if global_step % eval_step == 0:
+                    save_model = False
 
-                        result, preds, preds_victims = evaluate_test_squad(
-                            dev_dataloader,
-                            dev_examples, dev_features,
-                            tokenizer, model)
+                    result, preds, preds_victims = evaluate_test_squad(
+                        dev_dataloader,
+                        dev_examples, dev_features,
+                        tokenizer, model)
 
-                        model.train()
+                    model.train()
 
-                        result['global_step'] = global_step
-                        result['epoch'] = epoch
-                        result['batch_size'] = args.batch_size
+                    result['global_step'] = global_step
+                    result['epoch'] = epoch
+                    result['batch_size'] = args.batch_size
 
-                        dev_flag = False
-                        if args.use_metric and ((best_result is None) or (
-                                result[args.eval_metric] >
-                                best_result[args.eval_metric])):
-                            dev_flag = True
-                        elif not args.use_metric:
-                            dev_flag = True
+                    dev_flag = False
+                    if args.use_metric and ((best_result is None) or (
+                            result[args.eval_metric] >
+                            best_result[args.eval_metric])):
+                        dev_flag = True
+                    elif not args.use_metric:
+                        dev_flag = True
 
-                        if dev_flag:
-                            best_result = result
-                            save_model = True
+                    if dev_flag:
+                        if not os.path.exists(args.output_dir):
+                            os.makedirs(args.output_dir)
 
-                            # save prediction results
-                            f_out = open('dev_results.csv', 'w')
-                            for line in preds:
-                                f_out.write('%s' % line)
-                            f_out.close()
-                            f_out = open('dev_results_victims.csv', 'w')
-                            for line in preds_victims:
-                                f_out.write('%s' % line)
-                            f_out.close()
+                        best_result = result
+                        save_model = True
 
-                            logged_metrics = {
-                                "perpetrator pre": result["perpetrator pre"],
-                                "perpetrator rec": result["perpetrator rec"],
-                                "perpetrator f1": result["perpetrator f1"],
-                                "victim pre": result["victim pre"],
-                                "victim rec": result["victim rec"],
-                                "victim f1": result["victim f1"],
-                                "victim loose pre": result["victim loose pre"],
-                                "victim loose rec": result["victim loose rec"],
-                                "victim loose f1": result["victim loose f1"],
-                                "age acc": result["age acc"],
-                                "population acc": result["population acc"],
-                                "sex acc": result["sex acc"],
-                                "type acc": result["type acc"],
-                                "city acc": result["city acc"],
-                                "region acc": result["region acc"],
-                                "country acc": result["country acc"],
-                                "date acc": result["date acc"],
-                                "month acc": result["month acc"],
-                                "year acc": result["year acc"],
-                                "perpetrator type acc": result[
-                                    "perpetrator type acc"],
-                                "violation type acc": result[
-                                    "violation type acc"],
-                                "violation type loose acc": result[
-                                    "violation type loose acc"],
-                                "violation type pre": result[
-                                    "violation type pre"],
-                                "violation type rec": result[
-                                    "violation type rec"],
-                                "violation type f1": result[
-                                    "violation type f1"],
-                                "average score": result["average"]
-                            }
-                            mlflow.log_metrics(logged_metrics,
-                                               step=global_step)
-                            logger.info(
-                                f'Epoch: {epoch}/{args.epoch}, '
-                                f'Step: {nb_tr_steps % len(train_dataloader)}'
-                                f' / {len(train_dataloader)}, '
-                                f'used_time = {time.time() - start_time:.2f}s, '
-                                f'loss = {tr_loss / nb_tr_steps:.6f}')
+                        # save prediction results
+                        f_out = open(
+                            os.path.join(args.output_dir, 'dev_results.csv'),
+                            'w')
+                        for line in preds:
+                            f_out.write('%s' % line)
+                        f_out.close()
+                        f_out = open(os.path.join(args.output_dir,
+                                                  'dev_results_victims.csv'),
+                                     'w')
+                        for line in preds_victims:
+                            f_out.write('%s' % line)
+                        f_out.close()
 
-                            logger.info(
-                                f"!!! Best dev {args.eval_metric} "
-                                f"(lr={optimizer.param_groups[0]['lr']:.10f}): "
-                                f"perpetrator: "
-                                f"p: {result['perpetrator pre']:.2f} "
-                                f"r: {result['perpetrator rec']:.2f} "
-                                f"f1: {result['perpetrator f1']:.2f}, "
-                                f"victim exact match: "
-                                f"p: {result['victim pre']:.2f} "
-                                f"r: {result['victim rec']:.2f} "
-                                f"f1: {result['victim f1']:.2f}, "
-                                f"victim loose match: "
-                                f"p: {result['victim loose pre']:.2f} "
-                                f"r: {result['victim loose rec']:.2f} "
-                                f"f1: {result['victim loose f1']:.2f}, "
-                                f"age acc: {result['age acc']:.2f} "
-                                f"population acc: "
-                                f"{result['population acc']:.2f} "
-                                f"sex acc {result['sex acc']:.2f} "
-                                f"type acc {result['type acc']:.2f} "
-                                f"city acc {result['city acc']:.2f} "
-                                f"region acc {result['region acc']:.2f} "
-                                f"country acc {result['country acc']:.2f} "
-                                f"date acc {result['date acc']:.2f} "
-                                f"month acc {result['month acc']:.2f} "
-                                f"year acc {result['year acc']:.2f}  "
-                                f"perpetrator type acc "
-                                f"{result['perpetrator type acc']:.2f} "
-                                f"violation type acc "
-                                f"{result['violation type acc']:.2f} "
-                                f"violation type loose acc "
-                                f"{result['violation type loose acc']:.2f} "
-                                f"violation type pre "
-                                f"{result['violation type pre']:.2f} "
-                                f"violation type rec "
-                                f"{result['violation type rec']:.2f} "
-                                f"violation type f1 "
-                                f"{result['violation type f1']:.2f}")
+                        logged_metrics = {
+                            "perpetrator pre": result["perpetrator pre"],
+                            "perpetrator rec": result["perpetrator rec"],
+                            "perpetrator f1": result["perpetrator f1"],
+                            "victim pre": result["victim pre"],
+                            "victim rec": result["victim rec"],
+                            "victim f1": result["victim f1"],
+                            "victim loose pre": result["victim loose pre"],
+                            "victim loose rec": result["victim loose rec"],
+                            "victim loose f1": result["victim loose f1"],
+                            "age acc": result["age acc"],
+                            "population acc": result["population acc"],
+                            "sex acc": result["sex acc"],
+                            "type acc": result["type acc"],
+                            "city acc": result["city acc"],
+                            "region acc": result["region acc"],
+                            "country acc": result["country acc"],
+                            "date acc": result["date acc"],
+                            "month acc": result["month acc"],
+                            "year acc": result["year acc"],
+                            "perpetrator type acc": result[
+                                "perpetrator type acc"],
+                            "violation type acc": result[
+                                "violation type acc"],
+                            "violation type loose acc": result[
+                                "violation type loose acc"],
+                            "violation type pre": result[
+                                "violation type pre"],
+                            "violation type rec": result[
+                                "violation type rec"],
+                            "violation type f1": result[
+                                "violation type f1"],
+                            "average score": result["average"]
+                        }
+                        # mlflow.log_metrics(logged_metrics,
+                        #                    step=global_step)
+                        logger.info(
+                            f'Epoch: {epoch}/{args.epoch}, '
+                            f'Step: {nb_tr_steps % len(train_dataloader)}'
+                            f' / {len(train_dataloader)}, '
+                            f'used_time = {time.time() - start_time:.2f}s, '
+                            f'loss = {tr_loss / nb_tr_steps:.6f}')
 
-                            mlflow.log_artifact("dev_results.csv")
-                            mlflow.log_artifact("dev_results_victims.csv")
+                        logger.info(
+                            f"!!! Best dev {args.eval_metric} "
+                            f"(lr={optimizer.param_groups[0]['lr']:.10f}): "
+                            f"perpetrator: "
+                            f"p: {result['perpetrator pre']:.2f} "
+                            f"r: {result['perpetrator rec']:.2f} "
+                            f"f1: {result['perpetrator f1']:.2f}, "
+                            f"victim exact match: "
+                            f"p: {result['victim pre']:.2f} "
+                            f"r: {result['victim rec']:.2f} "
+                            f"f1: {result['victim f1']:.2f}, "
+                            f"victim loose match: "
+                            f"p: {result['victim loose pre']:.2f} "
+                            f"r: {result['victim loose rec']:.2f} "
+                            f"f1: {result['victim loose f1']:.2f}, "
+                            f"age acc: {result['age acc']:.2f} "
+                            f"population acc: "
+                            f"{result['population acc']:.2f} "
+                            f"sex acc {result['sex acc']:.2f} "
+                            f"type acc {result['type acc']:.2f} "
+                            f"city acc {result['city acc']:.2f} "
+                            f"region acc {result['region acc']:.2f} "
+                            f"country acc {result['country acc']:.2f} "
+                            f"date acc {result['date acc']:.2f} "
+                            f"month acc {result['month acc']:.2f} "
+                            f"year acc {result['year acc']:.2f}  "
+                            f"perpetrator type acc "
+                            f"{result['perpetrator type acc']:.2f} "
+                            f"violation type acc "
+                            f"{result['violation type acc']:.2f} "
+                            f"violation type loose acc "
+                            f"{result['violation type loose acc']:.2f} "
+                            f"violation type pre "
+                            f"{result['violation type pre']:.2f} "
+                            f"violation type rec "
+                            f"{result['violation type rec']:.2f} "
+                            f"violation type f1 "
+                            f"{result['violation type f1']:.2f}")
 
-                        if save_model:
-                            model_to_save = model.module if hasattr(
-                                model, 'module') else model
-                            subdir = './pretrained_model'
-                            if not os.path.exists(subdir):
-                                os.makedirs(subdir)
-                            output_model_file = os.path.join(
-                                subdir, "pytorch_model.bin")
-                            output_config_file = os.path.join(
-                                subdir, "config.json")
-                            torch.save(model_to_save.state_dict(),
-                                       output_model_file)
-                            model_to_save.config.to_json_file(
-                                output_config_file)
-                            tokenizer.save_vocabulary(subdir)
-                            mlflow.log_artifacts("./pretrained_model",
-                                                 artifact_path="model")
+                        # mlflow.log_artifact("dev_results.csv")
+                        # mlflow.log_artifact("dev_results_victims.csv")
+
+                    if save_model:
+                        model_to_save = model.module if hasattr(
+                            model, 'module') else model
+                        subdir = './pretrained_model'
+                        if not os.path.exists(subdir):
+                            os.makedirs(subdir)
+                        output_model_file = os.path.join(
+                            subdir, "pytorch_model.bin")
+                        output_config_file = os.path.join(
+                            subdir, "config.json")
+                        torch.save(model_to_save.state_dict(),
+                                   output_model_file)
+                        model_to_save.config.to_json_file(
+                            output_config_file)
+                        tokenizer.save_vocabulary(subdir)
+                        # mlflow.log_artifacts("./pretrained_model",
+                        #                      artifact_path="model")
 
         model_name = './pretrained_model'
         model_class = T5ForConditionalGeneration
@@ -1695,14 +1703,17 @@ if __name__ == "__main__":
             f"violation type f1 "
             f"{result['violation type f1']:.2f}")
 
-        f_out = open('test_results.csv', 'w')
+        f_out = open(os.path.join(args.output_dir,
+                                  'test_results.csv'), 'w')
         for line in test_preds:
             f_out.write('%s' % line)
         f_out.close()
-        f_out = open('test_results_victims.csv', 'w')
+        f_out = open(os.path.join(args.output_dir,
+                                  'test_results_victims.csv'), 'w')
         for line in test_preds_victims:
             f_out.write('%s' % line)
         f_out.close()
-
-        mlflow.log_artifact("test_results.csv")
-        mlflow.log_artifact("test_results_victims.csv")
+        logger.info(
+            f'the visualization results are saved in {args.output_dir}')
+        # mlflow.log_artifact("test_results.csv")
+        # mlflow.log_artifact("test_results_victims.csv")
