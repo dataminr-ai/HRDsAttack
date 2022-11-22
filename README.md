@@ -5,6 +5,13 @@ The code to train and evaluate the model on Human Rights Defenders dataset.
 - `python3.7+`
 - `pip3 install -r requirements.txt`
 
+# data
+first create a data sub-directory under the root directory
+```
+mkdir data
+```
+put the downloaded data files (train.json, dev.json) into the data sub-directory
+
 # Training
 ```
 python src/models/few_shot_t5.py --train_file ./data/train.json --dev_file ./data/dev.json
