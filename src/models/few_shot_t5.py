@@ -68,20 +68,20 @@ def load_examples(input_doc, filter_name=True, training=True):
     month_set.add(None)
 
     # test
-    for doc in os.listdir(
-            '/dbfs/mnt/s3fs-bucket/data/dlu/un_ohchr/data/annotated_processed_data/'):
-        if 'full_batch' not in doc:
-            continue
-        if training and doc == 'full_batch_1.json':
-            continue
-        elif (not training) and doc != 'full_batch_1.json':
-            continue
-        with open(os.path.join(
-                '/dbfs/mnt/s3fs-bucket/data/dlu/un_ohchr/data/annotated_processed_data/',
-                doc)) as fin:
-            # with open(input_doc) as fin:
-            cur_data = json.load(fin)
-            data = data + cur_data
+    # for doc in os.listdir(
+    #         '/dbfs/mnt/s3fs-bucket/data/dlu/un_ohchr/data/annotated_processed_data/'):
+    #     if 'full_batch' not in doc:
+    #         continue
+    #     if training and doc == 'full_batch_1.json':
+    #         continue
+    #     elif (not training) and doc != 'full_batch_1.json':
+    #         continue
+    #     with open(os.path.join(
+    #             '/dbfs/mnt/s3fs-bucket/data/dlu/un_ohchr/data/annotated_processed_data/',
+    #             doc)) as fin:
+    with open(input_doc) as fin:
+        data = json.load(fin)
+        # data = data + cur_data
 
     for sample in data:
         # initialize class values as None
@@ -141,7 +141,8 @@ def load_examples(input_doc, filter_name=True, training=True):
             except:
                 month = month
             if month not in month_set:
-                logger.info('month error: {month}')
+                logger.info(f'month error: {month}')
+                logger.info(f'{sample}')
             # normalize year and correct annotation errors for year
             year = sample['merged_sample']['year']
             if sample['sample']['Input.GLOBALEVENTID'] == 1004122033:
@@ -217,14 +218,22 @@ def load_examples(input_doc, filter_name=True, training=True):
 
 def input_ids_generate(context, question,
                        task_prefix, tokenizer,
-                       max_len=512, add_prefix=True):
+                       max_len=512, add_prefix=True, publish_date=None):
     if add_prefix:
-        input_text = '%s question: %s context: %s </s>' % (
-            task_prefix, question, context)
+        if not publish_date:
+            input_text = '%s question: %s context: %s </s>' % (
+                task_prefix, question, context)
+        else:
+            input_text = \
+                '%s question: %s publish date: %s context: %s </s>' % (
+                    task_prefix, question, publish_date, context)
     else:
-        input_text = 'question: %s context: %s </s>' % (
-            question, context)
-
+        if not publish_date:
+            input_text = 'question: %s context: %s </s>' % (
+                question, context)
+        else:
+            input_text = 'question: %s publish date: %s context: %s </s>' % (
+                question, publish_date, context)
     input_encodings = tokenizer.encode_plus(
         input_text, max_length=max_len)
     input_ids = input_encodings['input_ids']
@@ -268,7 +277,7 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
         # generate question answer pairs for 'Perpetrator Mention'
         task_prefix = 'detect perpetrator'
         question = 'Does it mention any perpetrator?'
-        input_ids, input_masks, truncated_text = \
+        input_ids, input_masks, truncated_text_1 = \
             input_ids_generate(context, question, task_prefix, tokenizer,
                                max_len=max_len, add_prefix=add_prefix)
 
@@ -298,9 +307,9 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
         for victim in victims:
             # only add the victim names present
             # in the truncated_text into answer
-            if victim[0] and victim[0] in truncated_text:
+            if victim[0] and victim[0] in truncated_text_1:
                 sorted_victims.append(
-                    [victim[0], truncated_text.find(victim[0])])
+                    [victim[0], truncated_text_1.find(victim[0])])
         sorted_victims.sort(key=lambda x: x[1])
 
         task_prefix = 'extract victims'
@@ -326,7 +335,7 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
         features.append(one_feature)
 
         for victim in victims:
-            if victim[0] and victim[0] in truncated_text:
+            if victim[0] and victim[0] in truncated_text_1:
                 victim_name = victim[0]
 
                 # age
@@ -585,7 +594,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
             question = 'On which date did the violation happen?'
             input_ids, input_masks, truncated_text = \
                 input_ids_generate(context, question, task_prefix, tokenizer,
-                                   max_len=max_len, add_prefix=add_prefix)
+                                   max_len=max_len, add_prefix=add_prefix,
+                                   publish_date=publish_date)
 
             answer = '%s </s>' % date
             target_encodings = tokenizer.encode_plus(answer)
@@ -607,7 +617,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
             question = 'In which month did the violation happen?'
             input_ids, input_masks, truncated_text = \
                 input_ids_generate(context, question, task_prefix, tokenizer,
-                                   max_len=max_len, add_prefix=add_prefix)
+                                   max_len=max_len, add_prefix=add_prefix,
+                                   publish_date=publish_date)
 
             answer = '%s </s>' % month
             target_encodings = tokenizer.encode_plus(answer)
@@ -629,7 +640,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
             question = 'In which year did the violation happen?'
             input_ids, input_masks, truncated_text = \
                 input_ids_generate(context, question, task_prefix, tokenizer,
-                                   max_len=max_len, add_prefix=add_prefix)
+                                   max_len=max_len, add_prefix=add_prefix,
+                                   publish_date=publish_date)
 
             answer = '%s </s>' % year
             # print([input_text, target_text])
@@ -675,8 +687,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 violation_type_answer = 'yes' if \
                     one_violation_type in violation_types else 'no'
                 task_prefix = 'extract violation type'
-                question = 'Is there any %s violation mentioned ' \
-                           'in the text?' % one_violation_type
+                question = 'Is there any %s violation mentioned in the text?' \
+                           % one_violation_type
                 input_ids, input_masks, truncated_text = \
                     input_ids_generate(context, question, task_prefix,
                                        tokenizer,
@@ -708,11 +720,13 @@ def generate_dataset_t5(data_features):
     all_input_ids = []
     all_output_ids = []
     all_input_masks = []
+    # all_target_mask_ids = []
     all_feature_idx = []
     for feature_idx, feature in enumerate(data_features):
         all_input_ids.append(feature['input_ids'])
         all_input_masks.append(feature['input_mask'])
         all_output_ids.append(feature['target_ids'])
+        # all_target_mask_ids.append(feature['target_mask'])
         all_feature_idx.append(feature_idx)
 
     bucket_dataset = T5Dataset(all_input_ids, all_input_masks,
@@ -727,6 +741,7 @@ def my_collate_t5(one_batch):
     list_input_ids = []
     list_input_masks = []
     list_output_ids = []
+    # list_target_atten_mak = []
     list_feature_idx = []
     max_len = 0
     max_len_tgt = 0
@@ -749,12 +764,16 @@ def my_collate_t5(one_batch):
         output_ids = sample[2] + [0] * (max_len_tgt - cur_len_tgt)
         list_output_ids.append(output_ids)
 
+        # target_attention_mask = sample[3] + [0] * (max_len_tgt - cur_len_tgt)
+        # list_target_atten_mak.append(target_attention_mask)
+
         list_feature_idx.append(sample[3])
 
     batch_input_ids = torch.LongTensor(list_input_ids)
     batch_input_masks = torch.LongTensor(list_input_masks)
     batch_output_ids = torch.LongTensor(list_output_ids)
     batch_output_ids[batch_output_ids == 0] = -100
+    # list_target_atten_mak_tensor = torch.LongTensor(list_target_atten_mak)
     batch_feature_idx = torch.LongTensor(list_feature_idx)
 
     return batch_input_ids, batch_input_masks, \
@@ -1215,8 +1234,9 @@ def evaluate_test_squad(dataloader, examples, features, tokenizer, model,
     for metric in result:
         if 'pre' in metric or 'rec' in metric:
             continue
-        if 'violation type acc' in metric or \
-                'violation type loose acc' in metric:
+        # if 'violation type acc' in metric or \
+        #         'violation type loose acc' in metric:
+        if 'violation' in metric and 'type acc' not in metric:
             continue
         average_score_list.append(result[metric])
     result['average'] = float(sum(average_score_list)) / float(
@@ -1441,13 +1461,13 @@ if __name__ == "__main__":
                     "lr_decay": args.lr_decay}
 
     with mlflow.start_run():
-        # optimizer.zero_grad()
+        optimizer.zero_grad()
         model.zero_grad()
         mlflow.set_tag("mlflow.runName", args.run_name)
         mlflow.log_params(saved_params)
         for epoch in range(args.epoch):
             epoch_loss = 0
-            # model.train()
+            model.train()
             current_lr = optimizer.param_groups[0]['lr']
             logger.info(
                 f"Start epoch #{epoch}/{args.epoch} (lr = {current_lr})...")
@@ -1460,6 +1480,7 @@ if __name__ == "__main__":
                     batch_input_ids = batch_input_ids.cuda()
                     batch_input_masks = batch_input_masks.cuda()
                     batch_output_ids = batch_output_ids.cuda()
+                    target_atten_mak_tensor = target_atten_mak_tensor.cuda()
 
                 loss = model(input_ids=batch_input_ids,
                              attention_mask=batch_input_masks,
@@ -1478,7 +1499,7 @@ if __name__ == "__main__":
                 if nb_tr_steps % args.gradient_accumulation_steps == 0:
                     optimizer.step()
                     scheduler.step()
-                    # optimizer.zero_grad()
+                    optimizer.zero_grad()
                     model.zero_grad()
                     global_step += 1
 
