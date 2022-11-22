@@ -21,5 +21,3 @@ python src/models/few_shot_t5.py --train_file ./data/train.json --dev_file ./dat
    --model_name t5-large-prefix-average-metric --dataset_name v1.0 --eval_metric average --add_prefix
    --use_metric
 ```
-
-# Evaluate
