@@ -38,5 +38,5 @@ To replicate the reported evaluation results on Human Rights Defenders dev set w
 ```
 python src/models/evaluate.py --model_dir ./pretrained_model --output_dir tmp/t5_un
 ```
---model_dir is the directory that contains the model checkpoint
---output_dir is the directory to save the visualization results
+- `--model_dir` is the directory that contains the model checkpoint
+- `--output_dir` is the directory to save the visualization results
