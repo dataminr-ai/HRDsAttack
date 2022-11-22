@@ -30,13 +30,13 @@ python src/models/few_shot_t5.py \
        --dataset_name v1.0 \
        --eval_metric average \
        --add_prefix \
-       --use_metric
-
+       --use_metric \
+       --replicate
 ```
 # Evaluation
 To replicate the reported evaluation results on Human Rights Defenders dev set with paraphrase-based fusion
 ```
-python src/models/evaluate.py --model_dir ./pretrained_model --output_dir tmp/t5_un
+python src/models/evaluate.py --model_dir ./pretrained_model --output_dir tmp/t5_un --replicate
 ```
 - `--model_dir` is the directory that contains the model checkpoint
 - `--output_dir` is the directory to save the visualization results
