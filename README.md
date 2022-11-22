@@ -5,7 +5,7 @@ The code to train and evaluate the model on Human Rights Defenders dataset.
 - `python3.7+`
 - `pip3 install -r requirements.txt`
 
-# data
+# Data
 first create a data sub-directory under the root directory
 ```
 mkdir data
@@ -13,6 +13,7 @@ mkdir data
 put the downloaded data files (train.json, dev.json) into the data sub-directory
 
 # Training
+All of the experiments were conducted on a single AWS g5.xlarge	machine, which is based on a NVIDIA A10G GPU. To train the model on different machines, the batch size should be modified to fit the GPU memory size.
 ```
 python src/models/few_shot_t5.py --train_file ./data/train.json --dev_file ./data/dev.json
    --lr 4e-5 --lr_decay 1e-5 --epoch 20 --batch_size 4
