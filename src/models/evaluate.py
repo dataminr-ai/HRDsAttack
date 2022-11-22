@@ -48,6 +48,7 @@ if __name__ == "__main__":
                         help='replicate the reported scores')
     args = parser.parse_args()
 
+    logger.info(f"Loading model from {args.model_dir}")
     model_class = T5ForConditionalGeneration
     tokenizer_mame = T5Tokenizer
     config_name = T5Config
@@ -57,7 +58,9 @@ if __name__ == "__main__":
                                                local_files_only=True)
     model = model_class.from_pretrained(args.model_dir, local_files_only=True)
 
+    logger.info(f"Loading data from {args.test_file}")
     test_examples = load_examples(args.test_file, split_doc=True)
+    logger.info("Generate features...")
     test_features = generate_features_t5(test_examples, tokenizer,
                                          add_prefix=args.add_prefix,
                                          max_len=512,
@@ -75,6 +78,7 @@ if __name__ == "__main__":
     if args.gpu >= 0:
         model.cuda()
 
+    logger.info(f"Running Evaluation...")
     result, test_preds, test_preds_victims = evaluate_all(
         test_dataloader,
         test_examples, test_features,
