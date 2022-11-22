@@ -94,6 +94,8 @@ if __name__ == "__main__":
                         help='name of the run')
     parser.add_argument('--context_filter', action='store_true',
                         help='filter context')
+    parser.add_argument('--replicate', action='store_true',
+                        help='replicate the reported scores')
     args = parser.parse_args()
 
     # set up run name for MLflow
