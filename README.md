@@ -16,9 +16,9 @@ python -m spacy download en_core_web_sm
 All of the experiments were conducted on a single AWS g5.xlarge	machine, which is based on a NVIDIA A10G GPU. To train the model on different machines, the batch size should be modified to fit the GPU memory size.
 ```
 python src/models/few_shot_t5.py \
-       --train_file src/data/train.json \
-       --dev_file src/data/dev.json \
-       --test_file src/data/dev.json \
+       --train_file data/train.json \
+       --dev_file data/dev.json \
+       --test_file data/dev.json \
        --lr 4e-5 \
        --lr_decay 1e-5 \
        --epoch 20 \
