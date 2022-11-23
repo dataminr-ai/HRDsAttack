@@ -248,14 +248,9 @@ if __name__ == "__main__":
                     "lr_decay": args.lr_decay}
     model.train()
 
-    # with mlflow.start_run():
     optimizer.zero_grad()
-    # model.zero_grad()
-    # mlflow.set_tag("mlflow.runName", args.run_name)
-    # mlflow.log_params(saved_params)
     for epoch in range(args.epoch):
         epoch_loss = 0
-        # model.train()
         current_lr = optimizer.param_groups[0]['lr']
         logger.info(
             f"Start epoch #{epoch}/{args.epoch} (lr = {current_lr})...")
@@ -287,7 +282,6 @@ if __name__ == "__main__":
                 optimizer.step()
                 scheduler.step()
                 optimizer.zero_grad()
-                # model.zero_grad()
                 global_step += 1
 
                 # do eval on dev every {eval_step} optimizer updates
