@@ -13,8 +13,7 @@ import mlflow
 import spacy
 import torch
 import pprint
-from transformers import T5ForConditionalGeneration, T5Tokenizer, T5Config, \
-    get_linear_schedule_with_warmup, Adafactor
+from transformers import T5ForConditionalGeneration, T5Tokenizer, T5Config
 
 from utils import load_examples, generate_features_t5, \
     generate_dataset_t5, my_collate_t5, evaluate_all
