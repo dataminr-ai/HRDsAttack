@@ -51,7 +51,33 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    logger.info(f"Loading model from {args.model_dir}")
+    from mlflow.tracking import MlflowClient
+    from pathlib import Path
+    import shutil
+
+    client = MlflowClient(tracking_uri="databricks", registry_uri="databricks")
+
+    run_id = "40ab0b70f4cc42c29a52bac561fa25d3"  # old split
+    artifacts = client.list_artifacts(run_id=run_id)
+
+    # set download path
+    model_folder = Path(args.model_dir)
+
+    # delete it if it exists
+    if model_folder.exists() and model_folder.is_dir():
+        shutil.rmtree(model_folder)
+
+    # create the download folder
+    model_folder.mkdir(parents=True)
+
+    # download artifacts to download destination
+    for artifact in artifacts:
+        client.download_artifacts(
+            run_id=run_id,
+            path=artifact.path,
+            dst_path=str(model_folder)
+        )
+    args.model_dir = os.path.join(model_folder, 'model')
     model_class = T5ForConditionalGeneration
     tokenizer_mame = T5Tokenizer
     config_name = T5Config
@@ -61,10 +87,9 @@ if __name__ == "__main__":
                                                local_files_only=True)
     model = model_class.from_pretrained(args.model_dir, local_files_only=True)
 
-    logger.info(f"Generating features from {args.test_file}")
-
     if args.fusion:
-        test_examples = load_examples(args.test_file, split_doc=True)
+        test_examples = load_examples(args.test_file, split_doc=True,
+                                      max_len=600)
         test_features = generate_features_t5(test_examples, tokenizer,
                                              add_prefix=args.add_prefix,
                                              max_len=512,
@@ -77,7 +102,6 @@ if __name__ == "__main__":
                                              add_prefix=args.add_prefix,
                                              max_len=512,
                                              context_filter=args.context_filter)
-        
     test_dataset = generate_dataset_t5(test_features)
     test_dataloader = torch.utils.data.DataLoader(
         test_dataset,
@@ -88,8 +112,6 @@ if __name__ == "__main__":
 
     if args.gpu >= 0:
         model.cuda()
-    
-    logger.info(f"Running Evaluation...")
     if args.fusion:
         result, test_preds, test_preds_victims = evaluate_all(
             test_dataloader,
