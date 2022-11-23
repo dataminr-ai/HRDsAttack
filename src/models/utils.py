@@ -1304,7 +1304,7 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
 
     all_num = 0
 
-    for step, batch in enumerate(tqdm(dataloader)):
+    for step, batch in enumerate(dataloader):
         batch_input_ids, batch_input_masks, \
         batch_output_ids, batch_feature_idx = batch
 

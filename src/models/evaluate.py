@@ -51,33 +51,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    from mlflow.tracking import MlflowClient
-    from pathlib import Path
-    import shutil
-
-    client = MlflowClient(tracking_uri="databricks", registry_uri="databricks")
-
-    run_id = "40ab0b70f4cc42c29a52bac561fa25d3"  # old split
-    artifacts = client.list_artifacts(run_id=run_id)
-
-    # set download path
-    model_folder = Path(args.model_dir)
-
-    # delete it if it exists
-    if model_folder.exists() and model_folder.is_dir():
-        shutil.rmtree(model_folder)
-
-    # create the download folder
-    model_folder.mkdir(parents=True)
-
-    # download artifacts to download destination
-    for artifact in artifacts:
-        client.download_artifacts(
-            run_id=run_id,
-            path=artifact.path,
-            dst_path=str(model_folder)
-        )
-    args.model_dir = os.path.join(model_folder, 'model')
     model_class = T5ForConditionalGeneration
     tokenizer_mame = T5Tokenizer
     config_name = T5Config
