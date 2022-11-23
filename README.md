@@ -36,12 +36,18 @@ python src/models/few_shot_t5.py \
 # Evaluation
 To replicate the reported evaluation results on Human Rights Defenders dev set with paragraph-based fusion
 ```
-python src/models/evaluate.py --model_dir ./pretrained_model --output_dir tmp/t5_un --fusion --replicate
+python src/models/evaluate.py \
+       --model_dir ./pretrained_model \
+       --output_dir tmp/t5_un \
+       --fusion \
+       --replicate
 ```
 - `--model_dir` is the directory that contains the model checkpoint
 - `--output_dir` is the directory to save the visualization results
 
 For evaluation without paragraph-based fusion
 ```
-python src/models/evaluate.py --model_dir ./pretrained_model --output_dir tmp/t5_un
+python src/models/evaluate.py \
+       --model_dir ./pretrained_model \
+       --output_dir tmp/t5_un
 ```
