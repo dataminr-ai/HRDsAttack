@@ -40,6 +40,7 @@ python src/models/evaluate.py \
        --model_dir ./pretrained_model \
        --output_dir tmp/t5_un \
        --fusion \
+       --add_prefix \
        --replicate
 ```
 - `--model_dir` is the directory that contains the model checkpoint
@@ -49,5 +50,6 @@ For evaluation without paragraph-based fusion
 ```
 python src/models/evaluate.py \
        --model_dir ./pretrained_model \
-       --output_dir tmp/t5_un
+       --output_dir tmp/t5_un \
+       --add_prefix
 ```
