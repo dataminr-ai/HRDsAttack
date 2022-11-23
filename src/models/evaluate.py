@@ -51,6 +51,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    logger.info(f"Loading model from {args.model_dir}")
     model_class = T5ForConditionalGeneration
     tokenizer_mame = T5Tokenizer
     config_name = T5Config
@@ -59,6 +60,8 @@ if __name__ == "__main__":
     tokenizer = tokenizer_mame.from_pretrained(args.model_dir,
                                                local_files_only=True)
     model = model_class.from_pretrained(args.model_dir, local_files_only=True)
+
+    logger.info(f"Generating features from {args.test_file}")
 
     if args.fusion:
         test_examples = load_examples(args.test_file, split_doc=True)
@@ -74,6 +77,7 @@ if __name__ == "__main__":
                                              add_prefix=args.add_prefix,
                                              max_len=512,
                                              context_filter=args.context_filter)
+        
     test_dataset = generate_dataset_t5(test_features)
     test_dataloader = torch.utils.data.DataLoader(
         test_dataset,
@@ -84,6 +88,8 @@ if __name__ == "__main__":
 
     if args.gpu >= 0:
         model.cuda()
+    
+    logger.info(f"Running Evaluation...")
     if args.fusion:
         result, test_preds, test_preds_victims = evaluate_all(
             test_dataloader,

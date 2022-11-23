@@ -1,2 +1,5 @@
 pre-trained-model-cache
 .ipynb_checkpoints
+pretrained_model
+tmp
+src/models/__pycache__/
