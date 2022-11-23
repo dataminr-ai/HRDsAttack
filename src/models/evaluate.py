@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(message)s',
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='UN OHCHR Detection')
+    parser = argparse.ArgumentParser(description='UN OHCHR Detection Evaluation')
     parser.add_argument('--gpu', type=int, default=0,
                         help='gup id, set to -1 if use cpu mode')
     parser.add_argument('--test_file',
