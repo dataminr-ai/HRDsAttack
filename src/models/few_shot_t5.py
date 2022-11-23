@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
     train_examples = load_examples(args.train_file)
     dev_examples = load_examples(args.dev_file)
-    test_examples = load_examples(args.test_file, split_doc=True)
+    test_examples = load_examples(args.test_file, split_doc=True, max_len=600)
 
     # generate data loaders
     logger.info(f"generate data loaders ...")
@@ -368,8 +368,7 @@ if __name__ == "__main__":
                                 "violation type f1"],
                             "average score": result["average"]
                         }
-                        # mlflow.log_metrics(logged_metrics,
-                        #                    step=global_step)
+
                         logger.info(
                             f'Epoch: {epoch}/{args.epoch}, '
                             f'Step: {nb_tr_steps % len(train_dataloader)}'
@@ -416,9 +415,6 @@ if __name__ == "__main__":
                             f"violation type f1 "
                             f"{result['violation type f1']:.2f}")
 
-                        # mlflow.log_artifact("dev_results.csv")
-                        # mlflow.log_artifact("dev_results_victims.csv")
-
                     if save_model:
                         model_to_save = model.module if hasattr(
                             model, 'module') else model
@@ -434,73 +430,70 @@ if __name__ == "__main__":
                         model_to_save.config.to_json_file(
                             output_config_file)
                         tokenizer.save_vocabulary(subdir)
-                        # mlflow.log_artifacts("./pretrained_model",
-                        #                      artifact_path="model")
 
-        model_name = './pretrained_model'
-        model_class = T5ForConditionalGeneration
-        tokenizer_mame = T5Tokenizer
-        config_name = T5Config
-        config = config_name.from_pretrained(model_name,
-                                             local_files_only=True)
-        tokenizer = tokenizer_mame.from_pretrained(model_name,
-                                                   local_files_only=True)
-        model = model_class.from_pretrained(model_name, local_files_only=True)
-        if args.gpu >= 0:
-            model.cuda()
-        result, test_preds, test_preds_victims = evaluate_all(
-            test_dataloader,
-            test_examples, test_features,
-            tokenizer, model, num_beams=2)
+    model_name = './pretrained_model'
+    model_class = T5ForConditionalGeneration
+    tokenizer_mame = T5Tokenizer
+    config_name = T5Config
+    config = config_name.from_pretrained(model_name,
+                                         local_files_only=True)
+    tokenizer = tokenizer_mame.from_pretrained(model_name,
+                                               local_files_only=True)
+    model = model_class.from_pretrained(model_name, local_files_only=True)
+    if args.gpu >= 0:
+        model.cuda()
+    result, test_preds, test_preds_victims = evaluate_all(
+        test_dataloader,
+        test_examples, test_features,
+        tokenizer, model, num_beams=2)
 
-        logger.info(
-            f"perpetrator: "
-            f"p: {result['perpetrator pre']:.2f} "
-            f"r: {result['perpetrator rec']:.2f} "
-            f"f1: {result['perpetrator f1']:.2f}, "
-            f"victim exact match: "
-            f"p: {result['victim pre']:.2f} "
-            f"r: {result['victim rec']:.2f} "
-            f"f1: {result['victim f1']:.2f}, "
-            f"victim loose match: "
-            f"p: {result['victim loose pre']:.2f} "
-            f"r: {result['victim loose rec']:.2f} "
-            f"f1: {result['victim loose f1']:.2f}, "
-            f"age acc: {result['age acc']:.2f} "
-            f"population acc: "
-            f"{result['population acc']:.2f} "
-            f"sex acc {result['sex acc']:.2f} "
-            f"type acc {result['type acc']:.2f} "
-            f"city acc {result['city acc']:.2f} "
-            f"region acc {result['region acc']:.2f} "
-            f"country acc {result['country acc']:.2f} "
-            f"date acc {result['date acc']:.2f} "
-            f"month acc {result['month acc']:.2f} "
-            f"year acc {result['year acc']:.2f}  "
-            f"perpetrator type acc "
-            f"{result['perpetrator type acc']:.2f} "
-            f"violation type acc "
-            f"{result['violation type acc']:.2f} "
-            f"violation type loose acc "
-            f"{result['violation type loose acc']:.2f} "
-            f"violation type pre "
-            f"{result['violation type pre']:.2f} "
-            f"violation type rec "
-            f"{result['violation type rec']:.2f} "
-            f"violation type f1 "
-            f"{result['violation type f1']:.2f}")
+    logger.info(
+        f"perpetrator: "
+        f"p: {result['perpetrator pre']:.2f} "
+        f"r: {result['perpetrator rec']:.2f} "
+        f"f1: {result['perpetrator f1']:.2f}, "
+        f"victim exact match: "
+        f"p: {result['victim pre']:.2f} "
+        f"r: {result['victim rec']:.2f} "
+        f"f1: {result['victim f1']:.2f}, "
+        f"victim loose match: "
+        f"p: {result['victim loose pre']:.2f} "
+        f"r: {result['victim loose rec']:.2f} "
+        f"f1: {result['victim loose f1']:.2f}, "
+        f"age acc: {result['age acc']:.2f} "
+        f"population acc: "
+        f"{result['population acc']:.2f} "
+        f"sex acc {result['sex acc']:.2f} "
+        f"type acc {result['type acc']:.2f} "
+        f"city acc {result['city acc']:.2f} "
+        f"region acc {result['region acc']:.2f} "
+        f"country acc {result['country acc']:.2f} "
+        f"date acc {result['date acc']:.2f} "
+        f"month acc {result['month acc']:.2f} "
+        f"year acc {result['year acc']:.2f}  "
+        f"perpetrator type acc "
+        f"{result['perpetrator type acc']:.2f} "
+        f"violation type acc "
+        f"{result['violation type acc']:.2f} "
+        f"violation type loose acc "
+        f"{result['violation type loose acc']:.2f} "
+        f"violation type pre "
+        f"{result['violation type pre']:.2f} "
+        f"violation type rec "
+        f"{result['violation type rec']:.2f} "
+        f"violation type f1 "
+        f"{result['violation type f1']:.2f}")
 
-        f_out = open(os.path.join(args.output_dir,
-                                  'test_results.csv'), 'w')
-        for line in test_preds:
-            f_out.write('%s' % line)
-        f_out.close()
-        f_out = open(os.path.join(args.output_dir,
-                                  'test_results_victims.csv'), 'w')
-        for line in test_preds_victims:
-            f_out.write('%s' % line)
-        f_out.close()
-        logger.info(
-            f'the visualization results are saved in {args.output_dir}')
-        # mlflow.log_artifact("test_results.csv")
-        # mlflow.log_artifact("test_results_victims.csv")
+    f_out = open(os.path.join(args.output_dir,
+                              'test_results.csv'), 'w')
+    for line in test_preds:
+        f_out.write('%s' % line)
+    f_out.close()
+    f_out = open(os.path.join(args.output_dir,
+                              'test_results_victims.csv'), 'w')
+    for line in test_preds_victims:
+        f_out.write('%s' % line)
+    f_out.close()
+    logger.info(
+        f'the visualization results are saved in {args.output_dir}')
+
