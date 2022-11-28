@@ -12,6 +12,9 @@ Download the Spacy English model:
 python -m spacy download en_core_web_sm
 ```
 
+# Data
+All samples in the training and dev set are news articles with annotated attributes regarding attacking events to Human-Right Defenders (or similar populations). Each field in the JSON files and its corresponding descriptions are listed in the table below
+
 # Training
 All of the experiments were conducted on a single AWS g5.xlarge	machine, which is based on a NVIDIA A10G GPU. To train the model on different machines, the batch size should be modified to fit the GPU memory size.
 ```
