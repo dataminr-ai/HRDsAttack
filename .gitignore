@@ -3,3 +3,4 @@ pre-trained-model-cache
 pretrained_model
 tmp
 src/models/__pycache__/
+.idea
