@@ -27,7 +27,7 @@ All samples in the training and dev set are news articles with annotated attribu
 |annotations|A list of dictionaries. Each dictionary contains an `annotation` object and additional worker information||
 |annotation|A dictionary with all event attributes as keys, and labels as values|{'city': 'San Francisco','country': 'United States of America', 'date': '25', 'month': 'April', 'perpetrator_mention': True, 'perpetrator_type': 'other actors without permissions',...}|
 |work_time_in_seconds|An integer representing how many seconds the worker spent to complete this annotation|658|
-|worker_id|A string representing the (*anonymized*) ID of the worker who annotated this sample|'A21UA6O7ZFAIQJ'|
+|worker_id|A string representing the (*anonymized*) ID of the worker who annotated this sample|'785a674a-5d15-4023-a6f6-60e336cfbb63'|
 |annotation.city|A string representing the city-level geo of the event|'San Francisco'|
 |annotation.region|A string representing the region-level geo of the event|'California'|
 |annotation.country|A string representing the country-level geo of the event|'United States of America'|
