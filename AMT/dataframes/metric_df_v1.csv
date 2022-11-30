@@ -1,0 +1,205 @@
+,key,value
+0,HITId,3M93N4X8HM23Y385DQGDRY8Q1Z7JSO
+1,HITTypeId,3GDF5H3EXM3LCWL5N13TJM58U8P52F
+2,Title,Answer a survey about news articles related to events to human-right defenders
+3,Description,"Read the news article, answer questions related to the details about the event mentioned in the news article."
+4,Keywords,"data collection, data extraction, event extraction, news article,"
+5,Reward,$1.00
+6,CreationTime,Tue Aug 02 06:43:32 PDT 2022
+7,MaxAssignments,3
+8,RequesterAnnotation,BatchId:361276;OriginalHitTemplateId:921587259;
+9,AssignmentDurationInSeconds,3600
+10,AutoApprovalDelayInSeconds,345600
+11,Expiration,Sat Aug 06 06:43:32 PDT 2022
+12,NumberOfSimilarHITs,
+13,LifetimeInSeconds,
+14,AssignmentId,31IBVUNM9VE58D17EX0YB7VLZ0HFVJ
+15,WorkerId,A3EXQVVREKQGG8
+16,AssignmentStatus,Submitted
+17,AcceptTime,Tue Aug 02 06:43:48 PDT 2022
+18,SubmitTime,Tue Aug 02 06:56:16 PDT 2022
+19,AutoApprovalTime,Sat Aug 06 06:56:16 PDT 2022
+20,ApprovalTime,
+21,RejectionTime,
+22,RequesterFeedback,
+23,WorkTimeInSeconds,748
+24,LifetimeApprovalRate,100% (141/141)
+25,Last30DaysApprovalRate,100% (9/9)
+26,Last7DaysApprovalRate,100% (1/1)
+27,Answer.abuse_type_arbitrary_detention_1.abuse_type_arbitrary_detention_1,True
+28,Answer.abuse_type_arbitrary_detention_2.abuse_type_arbitrary_detention_2,True
+29,Answer.abuse_type_arbitrary_detention_3.abuse_type_arbitrary_detention_3,True
+30,Answer.abuse_type_enforced_disappearance_1.abuse_type_enforced_disappearance_1,False
+31,Answer.abuse_type_enforced_disappearance_2.abuse_type_enforced_disappearance_2,False
+32,Answer.abuse_type_enforced_disappearance_3.abuse_type_enforced_disappearance_3,False
+33,Answer.abuse_type_kidnapping_1.abuse_type_kidnapping_1,False
+34,Answer.abuse_type_kidnapping_2.abuse_type_kidnapping_2,False
+35,Answer.abuse_type_kidnapping_3.abuse_type_kidnapping_3,False
+36,Answer.abuse_type_killing_1.abuse_type_killing_1,False
+37,Answer.abuse_type_killing_2.abuse_type_killing_2,False
+38,Answer.abuse_type_killing_3.abuse_type_killing_3,False
+39,Answer.abuse_type_other_1.abuse_type_other_1,False
+40,Answer.abuse_type_other_2.abuse_type_other_2,True
+41,Answer.abuse_type_other_3.abuse_type_other_3,False
+42,Answer.abuse_type_torture_1.abuse_type_torture_1,False
+43,Answer.abuse_type_torture_2.abuse_type_torture_2,False
+44,Answer.abuse_type_torture_3.abuse_type_torture_3,False
+45,Answer.checkpoint_code_gold_input,9138fd5f-c641-475e-80ed-4159d5d9cc78
+46,Answer.checkpoint_code_worker_input,9138fd5f-c641-475e-80ed-4159d5d9cc78
+47,Answer.date_incident,
+48,Answer.date_incident_1,
+49,Answer.date_incident_2,22
+50,Answer.date_incident_3,
+51,Answer.insufficient_info_1_0.insufficient_info_1_0,False
+52,Answer.insufficient_info_2_0.insufficient_info_2_0,False
+53,Answer.insufficient_info_3_0.insufficient_info_3_0,False
+54,Answer.location_city,
+55,Answer.location_city_1,
+56,Answer.location_city_2,Guantánamo
+57,Answer.location_city_3,
+58,Answer.location_country,Saudi Arabia
+59,Answer.location_country_1,Fiji
+60,Answer.location_country_2,Cuba
+61,Answer.location_country_3,Russia
+62,Answer.location_region,
+63,Answer.location_region_1,
+64,Answer.location_region_2,
+65,Answer.location_region_3,
+66,Answer.month_incident_1,
+67,Answer.month_incident_2,April
+68,Answer.month_incident_3,
+69,Answer.other_actor_na_permission_1_0.other_actor_na_permission_1_0,False
+70,Answer.other_actor_na_permission_2_0.other_actor_na_permission_2_0,False
+71,Answer.other_actor_na_permission_3_0.other_actor_na_permission_3_0,False
+72,Answer.other_actor_w_permission_1_0.other_actor_w_permission_1_0,False
+73,Answer.other_actor_w_permission_2_0.other_actor_w_permission_2_0,False
+74,Answer.other_actor_w_permission_3_0.other_actor_w_permission_3_0,False
+75,Answer.other_actor_wo_permission_1_0.other_actor_wo_permission_1_0,False
+76,Answer.other_actor_wo_permission_2_0.other_actor_wo_permission_2_0,False
+77,Answer.other_actor_wo_permission_3_0.other_actor_wo_permission_3_0,False
+78,Answer.perpetrator_mention_false.perpetrator_mention_false,False
+79,Answer.perpetrator_mention_true.perpetrator_mention_true,True
+80,Answer.state_actor_1_0.state_actor_1_0,True
+81,Answer.state_actor_2_0.state_actor_2_0,True
+82,Answer.state_actor_3_0.state_actor_3_0,True
+83,Answer.victim_age_group_adult_1_1.victim_age_group_adult_1_1,True
+84,Answer.victim_age_group_adult_1_2.victim_age_group_adult_1_2,True
+85,Answer.victim_age_group_adult_1_3.victim_age_group_adult_1_3,True
+86,Answer.victim_age_group_adult_1_4.victim_age_group_adult_1_4,True
+87,Answer.victim_age_group_adult_2_1.victim_age_group_adult_2_1,True
+88,Answer.victim_age_group_adult_2_2.victim_age_group_adult_2_2,True
+89,Answer.victim_age_group_adult_3_1.victim_age_group_adult_3_1,False
+90,Answer.victim_age_group_adult_3_2.victim_age_group_adult_3_2,False
+91,Answer.victim_age_group_child_1_1.victim_age_group_child_1_1,False
+92,Answer.victim_age_group_child_1_2.victim_age_group_child_1_2,False
+93,Answer.victim_age_group_child_1_3.victim_age_group_child_1_3,False
+94,Answer.victim_age_group_child_1_4.victim_age_group_child_1_4,False
+95,Answer.victim_age_group_child_2_1.victim_age_group_child_2_1,False
+96,Answer.victim_age_group_child_2_2.victim_age_group_child_2_2,False
+97,Answer.victim_age_group_child_3_1.victim_age_group_child_3_1,False
+98,Answer.victim_age_group_child_3_2.victim_age_group_child_3_2,False
+99,Answer.victim_age_group_other_1_1.victim_age_group_other_1_1,False
+100,Answer.victim_age_group_unknown_1_1.victim_age_group_unknown_1_1,False
+101,Answer.victim_age_group_unknown_1_2.victim_age_group_unknown_1_2,False
+102,Answer.victim_age_group_unknown_1_3.victim_age_group_unknown_1_3,False
+103,Answer.victim_age_group_unknown_1_4.victim_age_group_unknown_1_4,False
+104,Answer.victim_age_group_unknown_2_1.victim_age_group_unknown_2_1,False
+105,Answer.victim_age_group_unknown_2_2.victim_age_group_unknown_2_2,False
+106,Answer.victim_age_group_unknown_3_1.victim_age_group_unknown_3_1,True
+107,Answer.victim_age_group_unknown_3_2.victim_age_group_unknown_3_2,True
+108,Answer.victim_keywords_1_1,Fijian Trade Union Congress secretary general
+109,Answer.victim_keywords_1_2,information relations officer
+110,Answer.victim_keywords_1_3,general secretary of Fijian Teachers Association
+111,Answer.victim_keywords_1_4,Fiji Nurses Association general secretary
+112,Answer.victim_keywords_2_1,
+113,Answer.victim_keywords_2_2,
+114,Answer.victim_keywords_3_1,Pussy Riot
+115,Answer.victim_keywords_3_2,Pussy Riot
+116,Answer.victim_keywords_example,"student,executed"
+117,Answer.victim_name_1_1,Felix Anthony
+118,Answer.victim_name_1_2,Shiu Lingam
+119,Answer.victim_name_1_3,Paula Manumanuitoga
+120,Answer.victim_name_1_4,Salanieta Matiavi
+121,Answer.victim_name_2_1,Roberto Jesús Quiñones
+122,Answer.victim_name_2_2,Augusto César San Martín
+123,Answer.victim_name_3_1,Lusine Djanyan
+124,Answer.victim_name_3_2,Alexey Knedlyakovsky
+125,Answer.victim_name_example,Mujtaba al-Sweikat
+126,Answer.victim_pop_type_individual_1_1.victim_pop_type_individual_1_1,True
+127,Answer.victim_pop_type_individual_1_2.victim_pop_type_individual_1_2,True
+128,Answer.victim_pop_type_individual_1_3.victim_pop_type_individual_1_3,True
+129,Answer.victim_pop_type_individual_1_4.victim_pop_type_individual_1_4,True
+130,Answer.victim_pop_type_individual_2_1.victim_pop_type_individual_2_1,True
+131,Answer.victim_pop_type_individual_2_2.victim_pop_type_individual_2_2,True
+132,Answer.victim_pop_type_individual_3_1.victim_pop_type_individual_3_1,True
+133,Answer.victim_pop_type_individual_3_2.victim_pop_type_individual_3_2,True
+134,Answer.victim_pop_type_multiple_1_1.victim_pop_type_multiple_1_1,False
+135,Answer.victim_pop_type_multiple_1_2.victim_pop_type_multiple_1_2,False
+136,Answer.victim_pop_type_multiple_1_3.victim_pop_type_multiple_1_3,False
+137,Answer.victim_pop_type_multiple_1_4.victim_pop_type_multiple_1_4,False
+138,Answer.victim_pop_type_multiple_2_1.victim_pop_type_multiple_2_1,False
+139,Answer.victim_pop_type_multiple_2_2.victim_pop_type_multiple_2_2,False
+140,Answer.victim_pop_type_multiple_3_1.victim_pop_type_multiple_3_1,False
+141,Answer.victim_pop_type_multiple_3_2.victim_pop_type_multiple_3_2,False
+142,Answer.victim_sex_type_man_1_1.victim_sex_type_man_1_1,False
+143,Answer.victim_sex_type_man_1_2.victim_sex_type_man_1_2,False
+144,Answer.victim_sex_type_man_1_3.victim_sex_type_man_1_3,False
+145,Answer.victim_sex_type_man_1_4.victim_sex_type_man_1_4,False
+146,Answer.victim_sex_type_man_2_1.victim_sex_type_man_2_1,True
+147,Answer.victim_sex_type_man_2_2.victim_sex_type_man_2_2,False
+148,Answer.victim_sex_type_man_3_1.victim_sex_type_man_3_1,False
+149,Answer.victim_sex_type_man_3_2.victim_sex_type_man_3_2,False
+150,Answer.victim_sex_type_other_1_1.victim_sex_type_other_1_1,False
+151,Answer.victim_sex_type_unkown_1_1.victim_sex_type_unkown_1_1,True
+152,Answer.victim_sex_type_unkown_1_2.victim_sex_type_unkown_1_2,True
+153,Answer.victim_sex_type_unkown_1_3.victim_sex_type_unkown_1_3,True
+154,Answer.victim_sex_type_unkown_1_4.victim_sex_type_unkown_1_4,True
+155,Answer.victim_sex_type_unkown_2_1.victim_sex_type_unkown_2_1,False
+156,Answer.victim_sex_type_unkown_2_2.victim_sex_type_unkown_2_2,True
+157,Answer.victim_sex_type_unkown_3_1.victim_sex_type_unkown_3_1,True
+158,Answer.victim_sex_type_unkown_3_2.victim_sex_type_unkown_3_2,True
+159,Answer.victim_sex_type_woman_1_1.victim_sex_type_woman_1_1,False
+160,Answer.victim_sex_type_woman_1_2.victim_sex_type_woman_1_2,False
+161,Answer.victim_sex_type_woman_1_3.victim_sex_type_woman_1_3,False
+162,Answer.victim_sex_type_woman_1_4.victim_sex_type_woman_1_4,False
+163,Answer.victim_sex_type_woman_2_1.victim_sex_type_woman_2_1,False
+164,Answer.victim_sex_type_woman_2_2.victim_sex_type_woman_2_2,False
+165,Answer.victim_sex_type_woman_3_1.victim_sex_type_woman_3_1,False
+166,Answer.victim_sex_type_woman_3_2.victim_sex_type_woman_3_2,False
+167,Answer.victim_type_hrd_1_1.victim_type_hrd_1_1,False
+168,Answer.victim_type_hrd_1_2.victim_type_hrd_1_2,False
+169,Answer.victim_type_hrd_1_3.victim_type_hrd_1_3,False
+170,Answer.victim_type_hrd_1_4.victim_type_hrd_1_4,False
+171,Answer.victim_type_hrd_2_1.victim_type_hrd_2_1,False
+172,Answer.victim_type_hrd_2_2.victim_type_hrd_2_2,False
+173,Answer.victim_type_hrd_3_1.victim_type_hrd_3_1,True
+174,Answer.victim_type_hrd_3_2.victim_type_hrd_3_2,True
+175,Answer.victim_type_journalist_1_1.victim_type_journalist_1_1,False
+176,Answer.victim_type_journalist_1_2.victim_type_journalist_1_2,False
+177,Answer.victim_type_journalist_1_3.victim_type_journalist_1_3,False
+178,Answer.victim_type_journalist_1_4.victim_type_journalist_1_4,False
+179,Answer.victim_type_journalist_2_1.victim_type_journalist_2_1,True
+180,Answer.victim_type_journalist_2_2.victim_type_journalist_2_2,True
+181,Answer.victim_type_journalist_3_1.victim_type_journalist_3_1,False
+182,Answer.victim_type_journalist_3_2.victim_type_journalist_3_2,False
+183,Answer.victim_type_na_1_1.victim_type_na_1_1,False
+184,Answer.victim_type_na_1_2.victim_type_na_1_2,False
+185,Answer.victim_type_na_1_3.victim_type_na_1_3,False
+186,Answer.victim_type_na_1_4.victim_type_na_1_4,False
+187,Answer.victim_type_na_2_1.victim_type_na_2_1,False
+188,Answer.victim_type_na_2_2.victim_type_na_2_2,False
+189,Answer.victim_type_na_3_1.victim_type_na_3_1,False
+190,Answer.victim_type_na_3_2.victim_type_na_3_2,False
+191,Answer.victim_type_trade_unionist_1_1.victim_type_trade_unionist_1_1,True
+192,Answer.victim_type_trade_unionist_1_2.victim_type_trade_unionist_1_2,True
+193,Answer.victim_type_trade_unionist_1_3.victim_type_trade_unionist_1_3,True
+194,Answer.victim_type_trade_unionist_1_4.victim_type_trade_unionist_1_4,True
+195,Answer.victim_type_trade_unionist_2_1.victim_type_trade_unionist_2_1,False
+196,Answer.victim_type_trade_unionist_2_2.victim_type_trade_unionist_2_2,False
+197,Answer.victim_type_trade_unionist_3_1.victim_type_trade_unionist_3_1,False
+198,Answer.victim_type_trade_unionist_3_2.victim_type_trade_unionist_3_2,False
+199,Answer.year_incident_1,2019
+200,Answer.year_incident_2,2019
+201,Answer.year_incident_3,2017
+202,Approve,
+203,Reject,
