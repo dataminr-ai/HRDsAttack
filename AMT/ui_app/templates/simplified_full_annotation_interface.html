@@ -1,0 +1,1690 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+/>
+
+<script
+  src="https://kit.fontawesome.com/39132e3b25.js"
+  crossorigin="anonymous"
+></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+
+<style>
+  .card {
+    background-color: white;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    padding: 60px 40px 40px 40px;
+    z-index: 0;
+    display: block;
+    color: black;
+    margin-top: 2em;
+    margin-left: 1em;
+    width: 43%;
+  }
+
+  .card.example {
+    box-shadow: 0 8px 16px 0 rgba(29, 190, 70, 0.5);
+  }
+
+  li {
+    margin-top: 0.5em;
+  }
+
+  .semibold {
+    font-weight: 500;
+  }
+
+  .navigation_buttons {
+    display: flex;
+    width: fit-content;
+    margin: auto;
+    margin-top: 1em;
+  }
+
+  .definition_tooltip {
+    position: auto;
+    /* top: 8em;
+    left: 2em; */
+    margin-top: 5px;
+
+    width: auto;
+
+    background-color: #ffffff;
+
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+
+    border: black 2px solid;
+    border-radius: 4px;
+    padding: 0px;
+
+    height: 0px;
+    overflow: hidden;
+
+    visibility: hidden;
+    opacity: 0;
+
+    transition: 0.2s;
+
+    z-index: -1;
+  }
+
+  .definition_icon:hover + .definition_tooltip {
+    height: auto;
+    padding: 5px;
+    visibility: visible;
+    opacity: 1;
+    z-index: 999;
+  }
+
+  .definition_tooltip:hover {
+    height: auto;
+    padding: 5px;
+    visibility: visible;
+    opacity: 1;
+    z-index: 999;
+  }
+</style>
+
+<div
+  class="card"
+  id="page_1"
+  style="
+    position: absolute;
+    top: 10px;
+    width: 50%;
+    height: auto;
+    left: 25%;
+    display: block;
+  "
+>
+  <h1 align="center">Annotation Instructions</h1>
+
+  <div>
+    <p>
+      In this task, you will read <strong>1</strong> news article. The news
+      article is about one or more attack events targeting human rights
+      defenders or a similar population. You will then fill out a questionnaire
+      using the information from the article.
+    </p>
+    <p><strong>Some important definitions:</strong></p>
+    <ul>
+      <li>
+        <strong>Perpetrator</strong>: A person or a group who carries out a harmful,
+        illegal, or immoral act.
+      </li>
+
+      <li>
+        <strong>Victim</strong>: A person or a group of people harmed, injured,
+        or killed as a result of a crime, accident, or other event or action.
+        <br />
+        <br />
+        You then need to select
+        <span class="semibold">all</span> options that apply from the following
+        four types of Victims:
+        <br />
+        <ol>
+          <li>
+            <span class="semibold">Journalist</span>: A person observing events,
+            statements, policies, etc. that can affect society, with the purpose
+            of systematizing such information to inform society, including
+            support staff, as well as community media workers and “citizen
+            journalists” when they momentarily play that role.
+          </li>
+          <li>
+            <span class="semibold">Trade Unionist</span>: A person exercising
+            their right to form and to join trade unions for the protection of
+            their interests. A trade union is an association of workers
+            organized to protect and promote their common interests.
+          </li>
+          <li>
+            <span class="semibold">Human Rights Defender</span>: A person
+            exercising their right, to promote and to strive for the protection
+            and realization of human rights and fundamental freedoms, including
+            some journalists and trade unionists.
+          </li>
+          <li>
+            <span class="semibold">Insufficient information</span>: There is not
+            sufficient information available to make select one of the
+            categories described above.
+          </li>
+        </ol>
+      </li>
+    </ul>
+
+    <p>
+      You can check all these definitions later on in the questionnaire
+      interface by hovering your mouse cursor on the info icon
+      <i class="fa-solid fa-circle-info"></i> next to each item.
+    </p>
+
+    <p><strong>About the questionnaire:</strong></p>
+
+    <ul>
+      <li>
+        <p>
+          <strong>You must answer every question in the questionnaire.</strong>
+          If you cannot find the answer to a specific question, either select
+          the answer
+          <span class="semibold">Insufficient Information, Unknown, Other</span>
+          for selection questions, or type in
+          <span class="semibold">N/A</span> in the text box. You will not be
+          able to submit the HIT unless you answered all the questions.
+        </p>
+      </li>
+
+      <li>
+        <p>
+          When answering about victims, you need to first identify if the victim
+          mentioned in the article refers to
+          <strong>named individuals</strong> (<strong
+            >someone with a name</strong
+          >) or <strong>a group of unnamed individuals</strong> (<strong
+            >without explicit names, such as "a group of students"</strong
+          >). In the latter case, if the group has mixed genders and age groups,
+          select "Other" for Victim Sex Type and Victim Age Group questions.
+        </p>
+      </li>
+      <li>
+        <p>
+          For each victim that has a name mentioned in the article, please
+          select <strong>"Named Individual"</strong> in the questionnaire then
+          fill in their name individually. If multiple names are mentioned,
+          click the <strong>"Add Another Victim"</strong> button to add all
+          victims with their corresponding names. Only select
+          <strong>“Multiple (i.e. Group of unnamed individuals)”</strong> when
+          multiple victims are mentioned in the article without their specific
+          names.
+        </p>
+      </li>
+      <li>
+        <p>
+          If the news article is not about a event targeting human rights
+          defenders, please select the last option for selection questions and
+          put N/A in the text boxes. For example, select "Unknown" for "Victim
+          Sex Type" question.
+        </p>
+      </li>
+    </ul>
+
+    <p><strong>Read an example:</strong></p>
+
+    <p>
+      On the next page, you will see one example article and one questionnaire
+      with correct answers already filled in. Please read through the example
+      carefully.
+    </p>
+    <p>
+      You will be asked to copy a randomly generated code into one text box in
+      the middle of the example questionnaire, you only need to do this once on
+      the example page.
+      <br />
+      <br />
+      <strong
+        >NOTE: Your submission will be REJECTED if the code you pasted in the
+        box does not match the one shown to you</strong
+      >.
+    </p>
+
+    <div class="navigation_buttons">
+      <crowd-button
+        variant="primary"
+        onclick="navigation_button_onclick('page_1', 'page_2')"
+        >Next</crowd-button
+      >
+    </div>
+  </div>
+</div>
+
+<crowd-form
+  answer-format="flatten-objects"
+  onsubmit="return answer_validation()"
+>
+  <div style="display: none" id="page_2">
+    <div style="height: 100%; margin-top: 2em">
+      <div style="margin-left: 1em">
+        <strong>Note: This is an example.</strong>
+        <br />
+        <span
+          >Read the news article below then answer the questions on the right
+          hand side of your screen.</span
+        >
+      </div>
+      <div style="display: flex">
+        <div
+          class="card example"
+          style="top: 10px; position: sticky; height: 95%; left: 0px"
+        >
+          <h3>The Execution of Mujtaba al-Sweikat</h3>
+
+          <h4>02-May-2019</h4>
+
+          <span>
+            <p>
+              A Saudi student who gained admission to Western Michigan
+              University was beheaded last week for charges associated with his
+              participation in a pro-democracy protest.
+            </p>
+            <p>
+              He was 17 years old, at the airport to catch a flight to the U.S.,
+              where he planned to visit colleges and hoped to attend Western
+              Michigan University, where he subsequently gained admission. But
+              he was arrested for crimes related to participation in a
+              pro-democracy protest before he could board the plane.
+            </p>
+            <p>
+              Last week Saudi Arabia announced Mujtaba al-Sweikat was one of 37
+              people executed for terrorism-related crimes. The human rights
+              group Reprieve says al-Sweikat, who was arrested in December 2012,
+              was convicted on the basis of a confession obtained by torture.
+            </p>
+            <p>
+              CNN reported on court documents it obtained regarding al-Sweikat’s
+              prosecution. According to the documents obtained by the
+              broadcaster, al-Sweikat’s father, who served as his lawyer,
+              portrayed his son as a diligent student, loyal to the kingdom of
+              Saudi Arabia, who completed his final high school exams with a
+              score of 94 percent. Although al-Sweikat confessed to throwing
+              Molotov cocktails at security forces and running a chat group to
+              help organize demonstrations, his father claimed in reality he
+              joined the demonstrations just twice, for five minutes each time.
+            </p>
+            <p>
+              "He was subjected to psychological and physical abuse, which
+              drained his strength," his father reportedly said. "The
+              interrogator dictated the confession to Sweikat and forced him to
+              sign it so that the torture would stop. He signed it."
+            </p>
+            <p>
+              United Nations human rights officials had previously written to
+              Saudi officials regarding al-Sweikat’s case, using an alternative
+              spelling of his name. In November 2016, they wrote in regard to
+              information they had received that he “was routinely subjected to
+              torture including suspension from his hands and feet, sleep
+              deprivation, severe beatings with cables and shoes, cigarettes
+              burns and pouring of cold water on his body during winter. He was
+              put in solitary confinement for three months. As a result, Mr.
+              Suwaiket suffers from a broken shoulder, sustained pain in back
+              and knees and blood deficiency due to insufficient nutrition. He
+              has been deprived of any medical care. Mr. Suwaiket was reportedly
+              subjected to acts of torture until he confessed to armed
+              disobedience against the king and to attacking, shooting and
+              injuring security forces, civilians and passers-by … On 1 June
+              2016, after several hearings, Mr. Suwaiket was convicted and
+              sentenced to death by the [Specialized Criminal Court], on the
+              sole basis of the confession extracted under torture.”
+            </p>
+            <p>
+              The letter from the U.N. officials said that while they did not
+              want to prejudge the accuracy of the accusations regarding
+              al-Sweikat’s treatment, they were concerned about the decision to
+              impose the death penalty in light of international human right
+              conventions related to fair trials, due process, torture and
+              protection of the rights of children (as al-Sweikat was a juvenile
+              at the time the alleged crimes were committed).
+            </p>
+            <p>
+              RELATED | Court filings show some executed by Saudi Arabia
+              recanted confessions, said they were tortured A subsequent letter
+              from U.N. officials, sent in July 2017 in relation to multiple
+              cases, including al-Sweikat’s, faulted judges for failing to
+              investigate the allegations of torture and forced confessions.
+              “While it was raised in court that the confessions were forced and
+              had been obtained under torture, no investigation was initiated by
+              the judges. Instead the forced confessions were admitted as
+              evidence and used as the basis for their convictions,” they wrote
+            </p>
+            <p>
+              In a written response , Saudi Arabia’s mission to the U.N. said
+              that al-Sweikat was not subjected to torture or ill treatment.
+              They said the claim his shoulder was broken was false and that he
+              suffered from shoulder-related pain for five years prior to his
+              arrest due to “sports-related activities.”
+            </p>
+            <p>
+              Saudi government officials also denied that his confession was
+              extracted through torture and said he confessed “of his own free
+              will.” They said that the judge "did not rely solely on the
+              confession as evidence in his judgment but on the evidence
+              provided, including the arrest and investigation records, witness
+              statements, and the deliberations and statements made during the
+              judicial proceedings."
+            </p>
+            <p>
+              The Saudi mission wrote, “The lower court judgment sentenced
+              Mojtaba Suwaiket to death after convicting him of committing
+              crimes such as: manufacturing firebombs (Molotov cocktails) and
+              supplying them to others for use against law enforcement officers;
+              throwing firebombs at law enforcement officers and their vehicles;
+              involvement in the targeting of a security patrol by opening fire
+              on it; monitoring police officers, their location and their
+              movements and transmitting the information to members of another
+              cell who used it to implement one of their operations; concealment
+              of wanted individuals charged with opening fire on security
+              patrols and persons charged with launching attacks on private
+              property; concealment of persons charged with setting fire to a
+              security vehicle and stealing a machine gun and bulletproof vest
+              from it.”
+            </p>
+            <p>
+              In a subsequent communication , the Saudi mission said
+              al-Sweikat's death sentence was upheld on appeal by the Supreme
+              Court, rendering it “final and enforceable.”
+            </p>
+            <p>
+              Western Michigan previously confirmed al-Sweikat was admitted in
+              2013 but never enrolled. A university spokeswoman, Paula Davis,
+              said Monday he was an applicant for pre-finance studies and
+              English language. “We learned about his shocking death last week
+              and grieve this tragic loss of a young life full of potential,”
+              she said.
+            </p>
+            <p>
+              The American Federation of Teachers, which represents Western
+              Michigan faculty, was involved in campaigning for al-Sweikat’s
+              release.
+            </p>
+            <p>
+              “Saudi Arabia’s sickening criminal beheading of a young student,
+              after he was tortured and held in solitary confinement for years,
+              is a despicable violation of international law and basic
+              humanity,” Randi Weingarten, the AFT president, said in a
+              statement last week. “Condemned at 17, Mujtaba al-Sweikat was
+              planning to attend Western Michigan University when he was
+              arrested after attending a peaceful protest rally. Today, we
+              discover this young man has been executed, along with more than 30
+              others, in a ghastly display of state brutality.”
+            </p>
+            <p>
+              “If it was not already clear, Saudi Arabia, under the leadership
+              of Crown Prince Mohammed bin Salman, has moved to the top tier of
+              the bloodiest regimes in world history,” she said. “We demand the
+              U.S. government immediately condemn, in every way and with every
+              means, this disgusting and outrageous crime.”
+            </p>
+            <p>
+              ⚑ | Report an error, an omission, a typo; suggest a story or a new
+              angle to an existing story; submit a piece, a comment; recommend a
+              resource; contact the webmaster, contact us:
+              deathpenaltynews@gmail.com
+            </p>
+            <p>
+              Opposed to Capital Punishment? Help us keep this blog up and
+              running! DONATE!
+            </p>
+            <p>
+              "One is absolutely sickened, not by the crimes that the wicked
+              have committed,
+            </p>
+            <p>
+              but by the punishments that the good have inflicted." -- Oscar
+              Wilde
+            </p>
+          </span>
+        </div>
+
+        <div
+          class="card example"
+          style="top: 10px; height: 95%; margin-left: 2em; position: sticky"
+        >
+          <div>
+            <strong>Perpetrator </strong>
+
+            <i class="definition_icon fa-solid fa-circle-info"></i>
+            :
+            <div class="definition_tooltip" id="perpetrator_tooltip">
+              <strong>Perpetrator</strong>: A person or a group who carries out a harmful,
+              illegal, or immoral act.
+            </div>
+
+            <crowd-radio-group name="perpetrator_binary">
+              <span>Is there explicit mentions of the perpetrator?</span>
+              <br />
+              <crowd-radio-button
+                name="perpetrator_mention_true"
+                value="perpetrator_mention_true"
+                checked
+                disabled
+                >Yes</crowd-radio-button
+              >
+              <crowd-radio-button
+                name="perpetrator_mention_false"
+                value="perpetrator_mention_false"
+                disabled
+                >No</crowd-radio-button
+              >
+            </crowd-radio-group>
+
+            <crowd-radio-group style="display: none;" name="perpetrator_selection_example" required>
+              <span>If Yes, please select the perpetrator type:</span>
+              <br />
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="state_security_forces_example"
+                value="state_security_forces_example"
+                checked
+                disabled
+                >State Security Forces</crowd-radio-button
+              >
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="other_actors_example"
+                value="other_actors_example"
+                disabled
+                >Other State Actors</crowd-radio-button
+              >
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="other_actor_w_permission_example"
+                value="other_actor_w_permission_example"
+                disabled
+                >Armed actor on behalf of the State</crowd-radio-button
+              >
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="other_actor_no_permission_example"
+                value="other_actor_no_permission_example"
+                disabled
+                >Non-State Armed Actor</crowd-radio-button
+              >
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="other_non_state_actor_example"
+                value="other_non_state_actor_example"
+                disabled
+                >Other Non-State Actor</crowd-radio-button
+              >
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="regional_org_example"
+                value="regional_org_example"
+                disabled
+                >Regional Or International Organizations</crowd-radio-button
+              >
+              <crowd-radio-button
+                class="perpetrator_selection"
+                name="insufficient_info_example"
+                value="insufficient_info_example"
+                disabled
+                >Insufficient information</crowd-radio-button
+              >
+            </crowd-radio-group>
+          </div>
+
+          <div style="display: none;">
+            <strong>Violation type</strong>
+            <i class="definition_icon fa-solid fa-circle-info"></i>
+            :
+            <div class="definition_tooltip" id="violation_tooltip">
+              <strong>Violation</strong>: The action of break or fail to comply
+              with (a rule or formal agreement). You need to select
+              <span class="semibold">all</span> options that apply from the
+              following three types of Violations:
+              <br />
+              <ol>
+                <li>
+                  <span class="semibold">Killing</span>: Unlawful death
+                  inflicted upon a person with the intent to cause death or
+                  serious injury.
+                </li>
+                <li>
+                  <span class="semibold">Enforced disappearance</span>: Unlawful
+                  deprivation of liberty enforced or authorized by the state,
+                  that is not acknowledged by the state or the location of the
+                  victim is kept secret.
+                </li>
+                <li>
+                  <span class="semibold">Torture</span>: The action or practice
+                  of inflicting severe pain or suffering on someone as a
+                  punishment or in order to force them to do or say something.
+                </li>
+                <li>
+                  <span class="semibold">Arbitrary detention</span>: Arrest or
+                  detention not in accordance with national laws.
+                </li>
+                <li>
+                  <span class="semibold">Kidnapping</span>: Deprivation of
+                  liberty that is not enforced or authorized by the state.
+                </li>
+                <li>
+                  <span class="semibold">Other harmful acts</span>: Sexual
+                  violence or other acts causing or intending to cause harm,
+                  such as coercion or discrimination.
+                </li>
+                <li>
+                  <span class="semibold">No/Unknown harmful acts</span>: No
+                  harmful acts were conducted or there is not sufficient
+                  information to determine the harmful acts.
+                </li>
+              </ol>
+            </div>
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_killing"
+              value="abuse_type_killing"
+              disabled
+              checked
+              >Killing</crowd-checkbox
+            >
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_enforced_disappearance"
+              value="abuse_type_enforced_disappearance"
+              disabled
+              >Enforced disappearance</crowd-checkbox
+            >
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_torture"
+              value="abuse_type_torture"
+              disabled
+              checked
+              >Torture</crowd-checkbox
+            >
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_arbitrary_detention"
+              value="abuse_type_arbitrary_detention"
+              disabled
+              >Arbitrary Detention</crowd-checkbox
+            >
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_kidnapping"
+              value="abuse_type_kidnapping"
+              disabled
+              >Kidnapping</crowd-checkbox
+            >
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_other"
+              value="abuse_type_other"
+              disabled
+              >Other Harmful Acts</crowd-checkbox
+            >
+            <crowd-checkbox
+              style="margin: 1em"
+              name="abuse_type_none"
+              value="abuse_type_none"
+              disabled
+              >No/Unknown Harmful Acts</crowd-checkbox
+            >
+          </div>
+
+          <div id="victim_container_page2">
+            <div id="victim_groups_page2">
+              <div id="victim_group_page2">
+                <div>
+                  <p><strong>Victim Population:</strong></p>
+
+                  <crowd-radio-group name="victim_pop_type_selection">
+                    <crowd-radio-button
+                      class="victim_pop_selection"
+                      id="victim_pop_type_individual_example"
+                      name="victim_pop_type_individual_example"
+                      value="victim_pop_type_individual_example"
+                      checked
+                      disabled
+                      >Named Individual</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_pop_selection"
+                      id="victim_pop_type_multiple_example"
+                      name="victim_pop_type_multiple_example"
+                      value="victim_pop_type_multiple_example"
+                      disabled
+                      >Multiple (i.e. Group of unnamed
+                      individuals)</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+
+                <div id="victim_name_input_example" style="display: block">
+                  <p><strong>Victim Name:</strong></p>
+                  <crowd-input
+                    name="victim_name_example"
+                    placeholder="Enter the name of the victim"
+                    value="Mujtaba al-Sweikat"
+                  ></crowd-input>
+                </div>
+
+                <div id="victim_keywords_input">
+                  <p><strong>Victim Keywords:</strong></p>
+                  <crowd-input
+                    name="victim_keywords_example"
+                    placeholder="Enter any keywords about the victim, separated by ','"
+                    value="student,executed"
+                  ></crowd-input>
+                </div>
+
+                <div>
+                  <strong>Victim Type</strong>
+                  <i class="definition_icon fa-solid fa-circle-info"></i>
+                  :
+                  <div class="definition_tooltip" id="victim_tooltip">
+                    <strong>Victim</strong>: A person harmed, injured, or killed
+                    as a result of a crime, accident, or other event or action.
+                    You need to select <span class="semibold">all</span> options
+                    that apply from the following three types of Victims:
+                    <br />
+                    <ol>
+                      <li>
+                        <span class="semibold">Journalist</span>: A person
+                        observing events, statements, policies, etc. that can
+                        affect society, with the purpose of systematizing such
+                        information to inform society, including support staff,
+                        as well as community media workers and “citizen
+                        journalists” when they momentarily play that role.
+                      </li>
+                      <li>
+                        <span class="semibold">Trade Unionist</span>: A person
+                        exercising their right to form and to join trade unions
+                        for the protection of their interests. A trade union is
+                        an association of workers organized to protect and
+                        promote their common interests.
+                      </li>
+                      <li>
+                        <span class="semibold">Human Rights Defender</span>: A
+                        person exercising their right, to promote and to strive
+                        for the protection and realization of human rights and
+                        fundamental freedoms, including some journalists and
+                        trade unionists.
+                      </li>
+                      <li>
+                        <span class="semibold">Insufficient information</span>:
+                        There is not sufficient information available to make
+                        select one of the categories described above.
+                      </li>
+                    </ol>
+                  </div>
+                  <crowd-checkbox
+                    style="margin: 1em"
+                    name="victim_type_journalist"
+                    value="victim_type_journalist"
+                    disabled
+                    >Journalist</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                    style="margin: 1em"
+                    name="victim_type_trade_unionist"
+                    value="victim_type_trade_unionist"
+                    disabled
+                    >Trade Unionist</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                    style="margin: 1em"
+                    name="victim_type_trade_hrd"
+                    value="victim_type_trade_hrd"
+                    disabled
+                    checked
+                    >Human Rights Defender</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                    style="margin: 1em"
+                    name="victim_type_na"
+                    value="victim_type_na"
+                    disabled
+                    >Insufficient Information</crowd-checkbox
+                  >
+                </div>
+
+                <div>
+                  <p><strong>Victim Sex Type:</strong></p>
+                  <crowd-radio-group name="victim_sex_type_selection">
+                    <crowd-radio-button
+                      name="victim_sex_type_man"
+                      value="victim_sex_type_man"
+                      disabled
+                      checked
+                      >Male</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      name="victim_sex_type_woman"
+                      value="victim_sex_type_woman"
+                      disabled
+                      >Female</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      name="victim_sex_type_other"
+                      value="victim_sex_type_other"
+                      disabled
+                      >Other</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      name="victim_sex_type_unkown"
+                      value="victim_sex_type_unkown"
+                      disabled
+                      >Unknown</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+
+                <div>
+                  <p><strong>Victim Age Group:</strong></p>
+                  <crowd-radio-group name="victim_age_group_selection">
+                    <crowd-radio-button
+                      name="victim_age_group_adult"
+                      value="victim_age_group_adult"
+                      disabled
+                      >Adult (18 and above)</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      name="victim_age_group_child"
+                      value="victim_age_group_child"
+                      disabled
+                      checked
+                      >Child (below 18)</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      name="victim_age_group_other"
+                      value="victim_age_group_other"
+                      disabled
+                      >Other</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+              </div>
+            </div>
+            <crowd-button
+              style="margin-top: 2em"
+              onclick="add_victim()"
+              disabled
+              >Add Another Victim</crowd-button
+            >
+          </div>
+
+          <div style="display: none;">
+            <p><strong>Year of the Incident:</strong></p>
+            <crowd-input
+              name="date_incident"
+              placeholder="Enter the Year of the incident"
+              type="year"
+              value="2019"
+            ></crowd-input>
+
+            <p><strong>Month of the Incident:</strong></p>
+            <crowd-input
+              name="date_incident"
+              placeholder="Enter the Month of the incident"
+              value="April"
+            ></crowd-input>
+
+            <p><strong>Day of the Incident:</strong></p>
+            <crowd-input
+              name="date_incident"
+              placeholder="Enter the day of the month of the incident"
+              value="N/A"
+            ></crowd-input>
+          </div>
+
+          <div>
+            <p><strong>Checkpoint:</strong></p>
+            <p>Please copy and paste the following code into the text box:</p>
+            <p id="checkpoint_code_display"></p>
+            <crowd-input
+              name="checkpoint_code_worker_input"
+              placeholder="Copy/Paste the code above."
+            ></crowd-input>
+            <crowd-input
+              name="checkpoint_code_gold_input"
+              id="checkpoint_code_gold_input"
+              style="display: none"
+            ></crowd-input>
+          </div>
+
+          <!-- <div>
+          <p><strong>Time of the Incident:</strong></p>
+          <crowd-input
+            name="time_incident"
+            placeholder="Enter the time of the incident"
+            type="time"
+            value="N/A" disabled
+          ></crowd-input>
+        </div> -->
+
+          <div style="display: none;">
+            <p><strong>Location of the Incident:</strong></p>
+            <p>
+              <crowd-input
+                name="location_city"
+                placeholder="Town / City"
+                value="N/A"
+              ></crowd-input>
+            </p>
+            <p>
+              <crowd-input
+                name="location_region"
+                placeholder="Region / State / Province"
+                value="N/A"
+              ></crowd-input>
+            </p>
+            <p>
+              <crowd-input
+                name="location_country"
+                placeholder="Country"
+                value="Saudi Arabia"
+              ></crowd-input>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation_buttons">
+        <crowd-button onclick="navigation_button_onclick('page_2', 'page_1')"
+          >Back</crowd-button
+        >
+        <crowd-button
+          variant="primary"
+          style="margin-left: 1em"
+          onclick="navigation_button_onclick('page_2', 'page_3')"
+          >Next</crowd-button
+        >
+      </div>
+    </div>
+  </div>
+
+  <div style="display: none" id="page_3">
+    <div style="height: auto; margin-top: 2em">
+      <div style="margin-left: 1em">
+        <p><strong>Article 1 / 1</strong></p>
+        <strong>Instructions: </strong>
+        <span>Read the news article below then answer the questions.</span>
+      </div>
+      <div style="display: flex">
+        <div
+          class="card"
+          style="
+            position: absolute;
+            top: 10px;
+            position: sticky;
+            height: 100%;
+            left: 0px;
+          "
+        >
+          <h3>${title}</h3>
+
+          <h4>${publish_date}</h4>
+
+          <span>${article_interface}</span>
+        </div>
+
+        <div
+          class="card"
+          style="top: 10px; height: 100%; margin-left: 2em; position: sticky"
+        >
+          <div>
+            <strong>Perpetrator</strong>
+            <i class="definition_icon fa-solid fa-circle-info"></i>
+            :
+            <div class="definition_tooltip" id="perpetrator_tooltip_2">
+              <strong>Perpetrator</strong>: A person or a group who carries out a harmful,
+              illegal, or immoral act.
+            </div>
+
+            <crowd-radio-group name="perpetrator_binary">
+              <span>Is there explicit mentions of the perpetrator?</span>
+              <br />
+              <crowd-radio-button
+                id="perpetrator_mention_true_1"
+                name="perpetrator_mention_true_1"
+                value="perpetrator_mention_true_1"
+                >Yes</crowd-radio-button
+              >
+              <crowd-radio-button
+                id="perpetrator_mention_false_1"
+                name="perpetrator_mention_false_1"
+                value="perpetrator_mention_false_1"
+                >No</crowd-radio-button
+              >
+            </crowd-radio-group>
+
+          </div>
+
+
+
+          <div id="victim_container">
+            <div id="victim_groups_1">
+              <div id="victim_group_1_1">
+                <div>
+                  <p><strong>Victim Population:</strong></p>
+
+                  <crowd-radio-group name="victim_pop_type_selection">
+                    <crowd-radio-button
+                      class="victim_pop_selection"
+                      id="victim_pop_type_individual_1_1"
+                      name="victim_pop_type_individual_1_1"
+                      value="victim_pop_type_individual_1_1"
+                      onchange="victim_population_switch(this)"
+                      >Named Individual</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_pop_selection"
+                      id="victim_pop_type_multiple_1_1"
+                      name="victim_pop_type_multiple_1_1"
+                      value="victim_pop_type_multiple_1_1"
+                      onchange="victim_population_switch(this)"
+                      >Multiple (i.e. Group of unnamed
+                      individuals)</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+
+                <div id="victim_name_input_1_1" style="display: none">
+                  <p><strong>Victim Name:</strong></p>
+                  <crowd-input
+                    id="victim_name_1_1"
+                    name="victim_name_1_1"
+                    placeholder="Enter the name of the victim"
+                    required
+                    error-message="Please enter victim name, enter N/A if not found"
+                  ></crowd-input>
+                </div>
+
+                <div id="victim_keywords_input">
+                  <p><strong>Victim Keywords:</strong></p>
+                  <crowd-input
+                    name="victim_keywords_1_1"
+                    placeholder="Enter any keywords about the victim, separated by ','"
+                    required
+                    error-message="Please enter any keywords about the victim, enter N/A if not found"
+                  ></crowd-input>
+                </div>
+
+                <div>
+                  <strong>Victim Type</strong>
+                  <i class="definition_icon fa-solid fa-circle-info"></i>
+                  :
+                  <div class="definition_tooltip" id="victim_tooltip">
+                    <strong>Victim</strong>: A person harmed, injured, or killed
+                    as a result of a crime, accident, or other event or action.
+                    You need to select <span class="semibold">all</span> options
+                    that apply from the following three types of Victims:
+                    <br />
+                    <ol>
+                      <li>
+                        <span class="semibold">Journalist</span>: A person
+                        observing events, statements, policies, etc. that can
+                        affect society, with the purpose of systematizing such
+                        information to inform society, including support staff,
+                        as well as community media workers and “citizen
+                        journalists” when they momentarily play that role.
+                      </li>
+                      <li>
+                        <span class="semibold">Trade Unionist</span>: A person
+                        exercising their right to form and to join trade unions
+                        for the protection of their interests. A trade union is
+                        an association of workers organized to protect and
+                        promote their common interests.
+                      </li>
+                      <li>
+                        <span class="semibold">Human Rights Defender</span>: A
+                        person exercising their right, to promote and to strive
+                        for the protection and realization of human rights and
+                        fundamental freedoms, including some journalists and
+                        trade unionists.
+                      </li>
+                      <li>
+                        <span class="semibold">Insufficient information</span>:
+                        There is not sufficient information available to make
+                        select one of the categories described above.
+                      </li>
+                    </ol>
+                  </div>
+                  <crowd-checkbox
+                    class="victim_type_selection"
+                    style="margin: 1em"
+                    name="victim_type_journalist_1_1"
+                    value="victim_type_journalist_1_1"
+                    >Journalist</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                    class="victim_type_selection"
+                    style="margin: 1em"
+                    name="victim_type_trade_unionist_1_1"
+                    value="victim_type_trade_unionist_1_1"
+                    >Trade Unionist</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                    class="victim_type_selection"
+                    style="margin: 1em"
+                    name="victim_type_hrd_1_1"
+                    value="victim_type_hrd_1_1"
+                    >Human Rights Defender</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                    class="victim_type_selection"
+                    style="margin: 1em"
+                    name="victim_type_na_1_1"
+                    value="victim_type_na_1_1"
+                    >Insufficient Information</crowd-checkbox
+                  >
+                </div>
+
+                <div>
+                  <p><strong>Victim Sex Type:</strong></p>
+                  <crowd-radio-group name="victim_sex_type_selection">
+                    <crowd-radio-button
+                      class="victim_sex_selection"
+                      name="victim_sex_type_man_1_1"
+                      value="victim_sex_type_man_1_1"
+                      >Male</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_sex_selection"
+                      name="victim_sex_type_woman_1_1"
+                      value="victim_sex_type_woman_1_1"
+                      >Female</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_sex_selection"
+                      name="victim_sex_type_other_1_1"
+                      value="victim_sex_type_other_1_1"
+                      >Other</crowd-radio-button
+                    >
+
+                    <crowd-radio-button
+                      class="victim_sex_selection"
+                      name="victim_sex_type_unkown_1_1"
+                      value="victim_sex_type_unkown_1_1"
+                      >Unknown</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+
+                <div>
+                  <p><strong>Victim Age Group:</strong></p>
+                  <crowd-radio-group name="victim_age_group_selection">
+                    <crowd-radio-button
+                      class="victim_age_selection"
+                      name="victim_age_group_adult_1_1"
+                      value="victim_age_group_adult_1_1"
+                      >Adult (18 and above)</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_age_selection"
+                      name="victim_age_group_child_1_1"
+                      value="victim_age_group_child_1_1"
+                      >Child (below 18)</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_age_selection"
+                      name="victim_age_group_other_1_1"
+                      value="victim_age_group_other_1_1"
+                      >Other</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_age_selection"
+                      name="victim_age_group_unknown_1_1"
+                      value="victim_age_group_unknown_1_1"
+                      >Unknown</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+              </div>
+            </div>
+            <crowd-button
+              variant="primary"
+              style="margin-top: 2em"
+              onclick="add_victim(1)"
+              >Add Another Victim</crowd-button
+            >
+          </div>
+
+
+          <!-- <div>
+          <p><strong>Time of the Incident:</strong></p>
+          <crowd-input
+            name="time_incident"
+            placeholder="Enter the time of the incident"
+            type="time"
+          ></crowd-input>
+        </div> -->
+
+        </div>
+      </div>
+
+      <div class="navigation_buttons">
+        <crowd-button onclick="navigation_button_onclick('page_3', 'page_2')"
+          >Back</crowd-button
+        >
+        <crowd-button
+          onclick="notify_empty_input()"
+          form-action="submit"
+          variant="primary"
+          style="margin-left: 1em"
+          >Submit</crowd-button
+        >
+      </div>
+    </div>
+  </div>
+</crowd-form>
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.1.0/uuidv4.min.js"></script>
+
+<script>
+  var num_victims = {
+    1: 1,
+    2: 1,
+    3: 1,
+  };
+
+  function victim_population_switch(e) {
+    let temp = 1;
+    let page_idx = e.id.split('_')[4];
+    let victim_idx = e.id.split('_')[5];
+
+    let victim_input_container = document.getElementById(
+      "victim_name_input_" + page_idx + "_" + victim_idx
+    );
+
+    let victim_input_field = document.getElementById(
+      "victim_name_" + page_idx + "_" + victim_idx
+    );
+
+    if (e.id.includes("individual") && e.checked == true) {
+      // show victim name input
+      victim_input_container.style.display = "block";
+      victim_input_field.value = "";
+    }
+
+    if (e.id.includes("multiple") && e.checked == true) {
+      victim_input_container.style.display = "none";
+      victim_input_field.value = "N/A";
+    }
+  }
+
+  function perpetrator_display(e) {
+    let temp = 1;
+    let page_idx = e.id.slice(-1);
+    if (e.id.includes("true") && e.checked == true) {
+      document.getElementById(
+        "perpetrator_selection_container_" + page_idx
+      ).style.display = "block";
+
+      document.getElementsByName(
+        "insufficient_info_" + page_idx + "_0"
+      )[0].checked = false;
+    }
+
+    if (e.id.includes("false") && e.checked == true) {
+      document.getElementById(
+        "perpetrator_selection_container_" + page_idx
+      ).style.display = "none";
+
+      document.getElementsByName(
+        "insufficient_info_" + page_idx + "_0"
+      )[0].checked = true;
+    }
+  }
+
+  function add_victim(sample_idx) {
+    let victim_groups = document.getElementById("victim_groups_" + sample_idx);
+
+    let group_idx = victim_groups.childElementCount + 1;
+    let new_victim = document.createElement("div");
+    new_victim.id = "victim_group_" + sample_idx + "_" + group_idx;
+    new_victim.style = "margin-top: 3em;";
+    new_victim.innerHTML =
+      `
+      <div>
+                  <p><strong>Victim ` +
+      group_idx +
+      ` Population:</strong></p>
+
+                  <crowd-radio-group name="victim_pop_type_selection">
+                    <crowd-radio-button
+                      class="victim_pop_selection"
+                      id="victim_pop_type_individual_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                      name="victim_pop_type_individual_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                      value="victim_pop_type_individual_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                      onchange="victim_population_switch(this)"
+                      >Named Individual</crowd-radio-button
+                    >
+                    <crowd-radio-button
+                      class="victim_pop_selection"
+                      id="victim_pop_type_multiple_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                      name="victim_pop_type_multiple_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                      value="victim_pop_type_multiple_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                      onchange="victim_population_switch(this)"
+                      >Multiple (i.e. Group of unnamed individuals)</crowd-radio-button
+                    >
+                  </crowd-radio-group>
+                </div>
+
+                <div id="victim_name_input_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `" style="display: none;">
+                  <p><strong>Victim ` +
+      group_idx +
+      ` Name:</strong></p>
+                  <crowd-input
+                    id="victim_name_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    name="victim_name_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    placeholder="Enter the name of the victim"
+                    required
+                    error-message="Please enter victim name, enter N/A if not found"
+                  ></crowd-input>
+                </div>
+
+                <div id="victim_keywords_input">
+                  <p><strong>Victim ` +
+      group_idx +
+      ` Keywords:</strong></p>
+                  <crowd-input
+                    name="victim_keywords_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    placeholder="Enter any keywords about the victim, separated by ','"
+                    required
+                    error-message="Please enter any keywords about the victim, enter N/A if not found"
+                  ></crowd-input>
+                </div>
+
+              <div>
+                <p><strong>Victim ` +
+      group_idx +
+      ` Type:</strong></p>
+                  <crowd-checkbox
+                  style="margin: 1em"
+                    name="victim_type_journalist_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_type_journalist_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Journalist</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                  style="margin: 1em"
+                    name="victim_type_trade_unionist_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_type_trade_unionist_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Trade Unionist</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                  style="margin: 1em"
+                    name="victim_type_hrd_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_type_hrd_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Human Rights Defender</crowd-checkbox
+                  >
+                  <crowd-checkbox
+                  class="victim_type_selection"
+                  style="margin: 1em"
+                  name="victim_type_na_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                  value="victim_type_na_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                  >Insufficient Information</crowd-checkbox
+                >
+              </div>
+
+              <div>
+                <p><strong>Victim ` +
+      group_idx +
+      ` Sex Type:</strong></p>
+                <crowd-radio-group name="victim_sex_type_selection_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `" required>
+                  <crowd-radio-button
+                    name="victim_sex_type_man_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_sex_type_man_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Man</crowd-radio-button
+                  >
+                  <crowd-radio-button
+                    name="victim_sex_type_woman_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_sex_type_woman_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Woman</crowd-radio-button
+                  >
+                  <crowd-radio-button
+                    name="victim_sex_type_other_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_sex_type_other_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Other</crowd-radio-button
+                  >
+                  <crowd-radio-button
+                    name="victim_sex_type_unkown_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_sex_type_unkown_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Unknown</crowd-radio-button
+                  >
+                </crowd-radio-group>
+              </div>
+
+              <div>
+                <p><strong>Victim ` +
+      group_idx +
+      ` Age Group:</strong></p>
+                <crowd-radio-group required name="victim_age_group_selection_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `">
+                  <crowd-radio-button
+                    name="victim_age_group_adult_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_age_group_adult_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Adult (18 and above)</crowd-radio-button
+                  >
+                  <crowd-radio-button
+                    name="victim_age_group_child_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_age_group_child_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Child (below 18)</crowd-radio-button
+                  >
+                </crowd-radio-group>
+
+                <crowd-radio-button
+                    name="victim_age_group_unknown_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    value="victim_age_group_unknown_` +
+      sample_idx +
+      "_" +
+      group_idx +
+      `"
+                    >Unknown</crowd-radio-button
+                  >
+                </crowd-radio-group>
+              </div>
+              <crowd-button onclick="remove_victim(` +
+      sample_idx +
+      `)">Remove this victim</crowd-button>
+              `;
+
+    victim_groups.appendChild(new_victim);
+    num_victims[sample_idx] += 1;
+  }
+
+  function remove_victim(sample_idx) {
+    let victim_groups = document.getElementById("victim_groups_" + sample_idx);
+
+    let group_idx = victim_groups.childElementCount;
+
+    let target_victim = document.getElementById(
+      "victim_group_" + sample_idx + "_" + group_idx
+    );
+
+    victim_groups.removeChild(target_victim);
+    num_victims[sample_idx] -= 1;
+  }
+
+  function navigation_button_onclick(curr_page_id, target_page_id) {
+    let page_1 = document.getElementById(curr_page_id);
+    let page_2 = document.getElementById(target_page_id);
+
+    page_1.style.display = "none";
+    page_2.style.display = "block";
+
+    window.scrollTo(0, 0);
+  }
+
+  function selection_validation(selection_class_name) {
+    let selection_htmls = document.getElementsByClassName(selection_class_name);
+    let display_name = selection_class_name.split("_").slice(0, -1).join(" ");
+
+    let miss_selection_checker = (arr) => arr.every((v) => v === false);
+
+    let selections = [];
+    // different logic for check multi-selection answers
+    if (selection_class_name === "victim_type_selection") {
+      let victim_types = ["journalist", "trade_unionist", "hrd", "na"];
+
+      for (let page_idx = 1; page_idx <= 1; page_idx++) {
+        for (
+          let victim_group_idx = 1;
+          victim_group_idx <= num_victims[page_idx];
+          victim_group_idx++
+        ) {
+          let multi_selections = [];
+          for (let selection_type_idx in victim_types) {
+            let selection_option_name =
+              "victim_type_" +
+              victim_types[selection_type_idx] +
+              "_" +
+              page_idx +
+              "_" +
+              victim_group_idx;
+            multi_selections.push(
+              document.getElementsByName(selection_option_name)[0].checked
+            );
+          }
+          if (miss_selection_checker(multi_selections)) {
+            toastr.error(
+              "Please select answer for " +
+                display_name +
+                " on article " +
+                page_idx +
+                " !"
+            );
+            return false;
+          }
+        }
+      }
+    } else if (selection_class_name === "violation_selection") {
+      for (let page_idx = 1; page_idx <= 1; page_idx++) {
+        let violation_types = [
+          "abuse_type_killing",
+          "abuse_type_enforced_disappearance",
+          "abuse_type_torture",
+          "abuse_type_arbitrary_detention",
+          "abuse_type_kidnapping",
+          "abuse_type_other",
+          "abuse_type_none",
+        ];
+        let multi_selections = [];
+        for (let selection_type_idx in violation_types) {
+          let selection_option_name =
+            violation_types[selection_type_idx] + "_" + page_idx;
+          multi_selections.push(
+            document.getElementsByName(selection_option_name)[0].checked
+          );
+        }
+        if (miss_selection_checker(multi_selections)) {
+          toastr.error(
+            "Please select answer for " +
+              display_name +
+              " on article " +
+              page_idx +
+              " !"
+          );
+          return false;
+        }
+      }
+    } else {
+      for (var i = 0; i < selection_htmls.length; i++) {
+        selections.push(selection_htmls[i].checked);
+      }
+
+      if (miss_selection_checker(selections)) {
+        toastr.error(
+          "Please select answer for " + display_name + " on the questionnaire."
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function notify_empty_input() {
+    const inputFeilds = document.querySelectorAll("crowd-input");
+
+    const validInputs = Array.from(inputFeilds).filter(
+      (input) => input.value == ""
+    );
+
+    if (validInputs.length !== 0) {
+      if (
+        validInputs.length === 1 &&
+        validInputs[0].name === "checkpoint_code_worker_input"
+      ) {
+      } else {
+        toastr.error(
+          "Please answer all questions, put N/A if no answer available."
+        );
+      }
+    }
+  }
+
+  function answer_validation() {
+    let selection_class_names = [
+      "perpetrator_selection",
+      // "violation_selection",
+      "victim_type_selection",
+      "victim_age_selection",
+      "victim_sex_selection",
+    ];
+
+    for (var idx in selection_class_names) {
+      selection_class_name = selection_class_names[idx];
+      if (!selection_validation(selection_class_name)) {
+        return false;
+      }
+    }
+
+    // let binary_checker = arr => arr.every(v => v===true);
+    // const inputFeilds = document.querySelectorAll("crowd-input");
+
+    // const validInputs = Array.from(inputFeilds).filter( input => input.value !== "");
+
+    // if (!binary_checker(validInputs)){
+    //   alert("Please answer all questions, put N/A if no answer available.")
+    //   return false;
+    // }
+
+    return true;
+  }
+</script>
+
+<script>
+  var checkpoint_code = uuidv4();
+  let gold_checkpoint_input = document.getElementById(
+    "checkpoint_code_gold_input"
+  );
+  let checkpoint_code_display = document.getElementById(
+    "checkpoint_code_display"
+  );
+  checkpoint_code_display.innerHTML = checkpoint_code;
+  gold_checkpoint_input.value = checkpoint_code;
+</script>
