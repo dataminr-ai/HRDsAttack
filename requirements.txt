@@ -15,3 +15,6 @@ transformers==4.22.2
 datasets==2.5.2
 sentencepiece==0.1.97
 spacy==3.4.0
+flask==2.2.2
+thefuzz==0.19.0
+scikit-learn==1.1.3
