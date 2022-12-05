@@ -4,6 +4,7 @@ This folder contains all AMT related scripts and files, including:
 1. Data processing notebooks for annotation tasks and associated example intermediate files;
 2. Data folders ([dataframes](dataframes) and [util_data](util_data)), these are data files using in the data processing notebooks.
 3. A HTML hosting environment, including all the annotation UI HTML files.
+4. Python scripts related to AMT operations.
 
 ### Notebooks:
 The notebooks include all steps for data processing, before the annotation task and afterwards. 
@@ -24,3 +25,10 @@ python3 app.py
 Then go to http://127.0.0.1:5050/qualification to access the rendered qualification UI, and http://127.0.0.1:5050/full-task for the rendered full task UI.
 
 The [templates](ui_app/templates) folder contains all HTML files associated to the UIs.
+
+### Notify Workers via AWS CLI
+To send notifications to workers, edit the `subject_line`, `message_text`,and `worker_ids` in [notify_workers.py](scripts/notify_workers.py). Then run
+```bash
+python notify_worker.py
+```
+If the returned string contains 0 error then the message was successfully sent.
