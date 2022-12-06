@@ -89,7 +89,7 @@ python src/models/evaluate.py \
 ```
 
 # Results
-Here we report the evaluation results on the dev set for comparison against our Finetune experiment. These numbers are subject to change.
+Here we report the evaluation results on the dev set for comparison against our Finetune experiment.
 
 |Class|Metric|Off-the-Shelf|Finetune|Prefix w/o Fusion|Prefix w/ Fusion|
 |---|---|:---:|:---:|:---:|:---:|
