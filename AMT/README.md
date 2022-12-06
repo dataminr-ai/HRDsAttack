@@ -2,7 +2,7 @@
 This folder contains all AMT related scripts and files, including:
 
 1. Data processing notebooks for annotation tasks and associated example intermediate files;
-2. Data folders ([dataframes](dataframes) and [util_data](util_data)), these are data files using in the data processing notebooks.
+2. Data folders ([dataframes](dataframes) and [util_data](util_data)), these are data files used in the data processing notebooks.
 3. A HTML hosting environment, including all the annotation UI HTML files.
 4. Python scripts related to AMT operations.
 
