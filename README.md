@@ -91,20 +91,20 @@ python src/models/evaluate.py \
 # Results
 Here we report the evaluation results on the dev set for comparison against our Finetune experiment.
 
-|Class|Metric|Off-the-Shelf|Finetune|Prefix w/o Fusion|Prefix w/ Fusion|
-|---|---|:---:|:---:|:---:|:---:|
-|Perpetrator Mention|F1|45.90%|95.14%|96.88%|**97.38%**|
-|Perpetrator Type|Accuracy|34.00%|45.00%|52.00%|**52.00%***|
-|Victim Name|Fuzzy Match F1|29.69%|47.66%|57.47%|**69.23%**|
-|Victim Type|Accuracy|-|76.39%|**82.86%**|**82.86%***|
-|Victim Sex Type|Accuracy|-|87.50%|**90.00%**|**90.00%***|
-|Victim Age Group|Accuracy|-|86.11%|**87.14%**|**87.14%***|
-|Violation Type|F1|-|-|64.62%|**78.40%**|
-|Country|Accuracy|-|54.00%|**59.00%**|**59.00%***|
-|Region|Accuracy|-|19.00%|**24.00%**|**24.00%***|
-|City|Accuracy|-|41.00%|**43.00%**|**43.00%***|
-|Year|Accuracy|-|**74.00%**|71.00%|71.00%*|
-|Month|Accuracy|-|50.00%|**52.00%**|**52.00%***|
-|Date|Accuracy|-|22.00%|**27.00%**|**27.00%***|
+|Class|Metric|Off-the-Shelf|Finetune|Prefix w/o Fusion|Prefix w/ Fusion|Prefix Hybrid|
+|---|---|:---:|:---:|:---:|:---:|:---:|
+|Perpetrator Mention|F1|45.90%|95.14%|96.88%|**97.38%**|**97.38%**|
+|Perpetrator Type|Accuracy|34.00%|45.00%|**52.00%**|47.00%|**52.00%***|
+|Victim Name|Fuzzy Match F1|29.69%|47.66%|57.47%|**69.23%**|**69.23%**|
+|Victim Type|Accuracy|-|76.39%|82.86%|**83.17%**|**83.17%**|
+|Victim Sex Type|Accuracy|-|87.50%|**90.00%**|87.13%|**90.00%***|
+|Victim Age Group|Accuracy|-|86.11%|87.14%|**89.11%**|**89.11%**|
+|Violation Type|F1|-|-|64.62%|**78.40%**|**78.40%**|
+|Country|Accuracy|-|54.00%|**59.00%**|52.00%|**59.00%***|
+|Region|Accuracy|-|19.00%|**24.00%**|8.00%|**24.00%***|
+|City|Accuracy|-|41.00%|**43.00%**|40.00%|**43.00%***|
+|Year|Accuracy|-|**74.00%**|71.00%|68.00%|71.00%*|
+|Month|Accuracy|-|50.00%|**52.00%**|47.00%|**52.00%***|
+|Day|Accuracy|-|22.00%|**27.00%**|25.00%|**27.00%***|
 
 *: Fusion not applied.
