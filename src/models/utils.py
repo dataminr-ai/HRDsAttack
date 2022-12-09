@@ -230,7 +230,7 @@ def input_ids_generate(context, question,
 def generate_features_t5(examples, tokenizer, add_prefix=False,
                          max_len=512, context_filter=False,
                          split_doc=False, top_sentence=None,
-                         replicate=False):
+                         replicate=False, hybrid=True):
     """
     generate features from examples
     :param examples: input examples
@@ -276,7 +276,7 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
             input_ids, input_masks, truncated_text_1 = \
                 input_ids_generate(context, question, task_prefix, tokenizer,
                                    max_len=max_len, add_prefix=add_prefix)
-            if replicate:
+            if replicate or hybrid:
                 _, _, truncated_text_raw = input_ids_generate(
                     raw_context,
                     question,
@@ -339,21 +339,71 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
             features.append(one_feature)
 
             if replicate:
-                tmp_context = raw_context
                 tmp_truncated_text = truncated_text_raw
-            else:
-                tmp_context = context
+                tmp_truncated_text_victim_sex = truncated_text_raw
+                context_map = {
+                    'age': raw_context,
+                    'population': raw_context,
+                    'sex': raw_context,
+                    'victim_type': raw_context,
+                    'city': raw_context,
+                    'region': raw_context,
+                    'country': raw_context,
+                    'date': raw_context,
+                    'month': raw_context,
+                    'year': raw_context,
+                    'perpetrator_type': raw_context,
+                    'violation_type': context
+                }
+            elif hybrid:
+                tmp_truncated_text_victim_sex = truncated_text_raw
                 tmp_truncated_text = truncated_text_1
+                context_map = {
+                    'age': context,
+                    'population': context,
+                    'sex': raw_context,
+                    'victim_type': context,
+                    'city': raw_context,
+                    'region': raw_context,
+                    'country': raw_context,
+                    'date': raw_context,
+                    'month': raw_context,
+                    'year': raw_context,
+                    'perpetrator_type': raw_context,
+                    'violation_type': context
+                }
+            else:
+                tmp_truncated_text = truncated_text_1
+                tmp_truncated_text_victim_sex = truncated_text_1
+                context_map = {
+                    'age': context,
+                    'population': context,
+                    'sex': context,
+                    'victim_type': context,
+                    'city': context,
+                    'region': context,
+                    'country': context,
+                    'date': context,
+                    'month': context,
+                    'year': context,
+                    'perpetrator_type': context,
+                    'violation_type': context
+                }
 
             for victim in victims:
                 if victim[0] and victim[0] in tmp_truncated_text:
                     victim_name = victim[0]
 
+                    if victim[0] in tmp_truncated_text_victim_sex:
+                        sub_victim = True
+                    else:
+                        sub_victim = False
+                        
                     # age
                     task_prefix = 'extract victim age'
                     question = 'What is the age group of %s?' % victim_name
                     input_ids, input_masks, truncated_text = \
-                        input_ids_generate(tmp_context, question, task_prefix,
+                        input_ids_generate(context_map['age'], question, task_prefix,
                                            tokenizer,
                                            max_len=max_len,
                                            add_prefix=add_prefix)
@@ -370,7 +420,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                         'target_ids': target_ids,
                         'target_mask': target_masks,
                         'task': 'victim_age',
-                        'victim': victim_name
+                        'victim': victim_name,
+                        'sub_victim': sub_victim
                     }
                     features.append(one_feature)
 
@@ -378,7 +429,7 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                     task_prefix = 'extract victim population type'
                     question = 'What is the population type of %s?' % victim_name
                     input_ids, input_masks, truncated_text = \
-                        input_ids_generate(tmp_context, question, task_prefix,
+                        input_ids_generate(context_map['population'], question, task_prefix,
                                            tokenizer,
                                            max_len=max_len,
                                            add_prefix=add_prefix)
@@ -395,40 +446,18 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                         'target_ids': target_ids,
                         'target_mask': target_masks,
                         'task': 'victim_population_type',
-                        'victim': victim_name
+                        'victim': victim_name,
+                        'sub_victim': sub_victim
                     }
 
-                    features.append(one_feature)
-                    # sex
-                    task_prefix = 'extract victim sex'
-                    question = 'What is the sex of %s?' % victim_name
-                    input_ids, input_masks, truncated_text = \
-                        input_ids_generate(tmp_context, question, task_prefix,
-                                           tokenizer,
-                                           max_len=max_len,
-                                           add_prefix=add_prefix)
-
-                    answer = '%s </s>' % (victim[3])
-                    target_encodings = tokenizer.encode_plus(answer)
-                    target_ids = target_encodings['input_ids']
-                    target_masks = target_encodings['attention_mask']
-
-                    one_feature = {
-                        'example_id': example_id,
-                        'input_ids': input_ids,
-                        'input_mask': input_masks,
-                        'target_ids': target_ids,
-                        'target_mask': target_masks,
-                        'task': 'victim_sex_type',
-                        'victim': victim_name
-                    }
                     features.append(one_feature)
 
                     # type
                     task_prefix = 'extract victim type'
                     question = 'Is %s a trade unionist?' % victim_name
                     input_ids, input_masks, truncated_text = \
-                        input_ids_generate(tmp_context, question, task_prefix,
+                        input_ids_generate(context_map['victim_type'],
+                                           question, task_prefix,
                                            tokenizer,
                                            max_len=max_len,
                                            add_prefix=add_prefix)
@@ -450,7 +479,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                         'target_mask': target_masks,
                         'task': 'victim_type',
                         'victim': victim_name,
-                        'victim_type': 'trade unionist'
+                        'victim_type': 'trade unionist',
+                        'sub_victim': sub_victim
                     }
                     features.append(one_feature)
 
@@ -458,7 +488,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                     question = 'Is %s a journalist?' % victim_name
 
                     input_ids, input_masks, truncated_text = \
-                        input_ids_generate(tmp_context, question, task_prefix,
+                        input_ids_generate(context_map['victim_type'],
+                                           question, task_prefix,
                                            tokenizer,
                                            max_len=max_len,
                                            add_prefix=add_prefix)
@@ -479,14 +510,16 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                         'target_mask': target_masks,
                         'task': 'victim_type',
                         'victim': victim_name,
-                        'victim_type': 'journalist'
+                        'victim_type': 'journalist',
+                        'sub_victim': sub_victim
                     }
                     features.append(one_feature)
 
                     task_prefix = 'extract victim type'
                     question = 'Is %s a human rights defender?' % victim_name
                     input_ids, input_masks, truncated_text = \
-                        input_ids_generate(tmp_context, question, task_prefix,
+                        input_ids_generate(context_map['victim_type'],
+                                           question, task_prefix,
                                            tokenizer,
                                            max_len=max_len,
                                            add_prefix=add_prefix)
@@ -507,16 +540,50 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                         'target_mask': target_masks,
                         'task': 'victim_type',
                         'victim': victim_name,
-                        'victim_type': 'human rights defender'
+                        'victim_type': 'human rights defender',
+                        'sub_victim': sub_victim
                     }
                     features.append(one_feature)
 
+                if victim[0] and victim[0] in tmp_truncated_text_victim_sex:
+                    victim_name = victim[0]
+                    # sex
+                    task_prefix = 'extract victim sex'
+                    # if not replicate and hybrid:
+                    #     tmp_context = raw_context
+                    # tmp_truncated_text = truncated_text_raw
+                    question = 'What is the sex of %s?' % victim_name
+                    input_ids, input_masks, truncated_text = \
+                        input_ids_generate(context_map['sex'], question,
+                                           task_prefix,
+                                           tokenizer,
+                                           max_len=max_len,
+                                           add_prefix=add_prefix)
+
+                    answer = '%s </s>' % (victim[3])
+                    target_encodings = tokenizer.encode_plus(answer)
+                    target_ids = target_encodings['input_ids']
+                    target_masks = target_encodings['attention_mask']
+
+                    one_feature = {
+                        'example_id': example_id,
+                        'input_ids': input_ids,
+                        'input_mask': input_masks,
+                        'target_ids': target_ids,
+                        'target_mask': target_masks,
+                        'task': 'victim_sex_type',
+                        'victim': victim_name,
+                        'sub_victim': sub_victim
+                    }
+                    features.append(one_feature)
+                    
             if annotation_type == 'full':
                 # city
                 task_prefix = 'extract violation city'
                 question = 'In which city did the violation happen?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['city'], question,
+                                       task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix)
 
@@ -547,7 +614,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 task_prefix = 'extract violation region'
                 question = 'In which region did the violation happen?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['region'], question,
+                                       task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix)
 
@@ -577,7 +645,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 task_prefix = 'extract violation country'
                 question = 'In which country did the violation happen?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['country'], question,
+                                       task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix)
 
@@ -607,7 +676,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 task_prefix = 'extract violation date'
                 question = 'On which date did the violation happen?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['date'], question,
+                                       task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix,
                                        publish_date=publish_date)
@@ -631,7 +701,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 task_prefix = 'extract violation month'
                 question = 'In which month did the violation happen?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['month'], question,
+                                       task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix,
                                        publish_date=publish_date)
@@ -655,7 +726,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 task_prefix = 'extract violation year'
                 question = 'In which year did the violation happen?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['year'], question,
+                                       task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix,
                                        publish_date=publish_date)
@@ -680,7 +752,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 task_prefix = 'extract perpetrator type'
                 question = 'What is the type of the perpetrator?'
                 input_ids, input_masks, truncated_text = \
-                    input_ids_generate(tmp_context, question, task_prefix,
+                    input_ids_generate(context_map['perpetrator_type'],
+                                       question, task_prefix,
                                        tokenizer,
                                        max_len=max_len, add_prefix=add_prefix)
 
@@ -708,7 +781,8 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                     question = 'Is there any %s violation mentioned in the text?' \
                                % one_violation_type
                     input_ids, input_masks, truncated_text = \
-                        input_ids_generate(context, question, task_prefix,
+                        input_ids_generate(context_map['violation_type'],
+                                           question, task_prefix,
                                            tokenizer,
                                            max_len=max_len,
                                            add_prefix=add_prefix)
@@ -1261,7 +1335,7 @@ def evaluate_dev(dataloader, examples, features, tokenizer, model,
 
 
 def evaluate_all(dataloader, examples, features, tokenizer, model,
-                 gpu=True, num_beams=2):
+                 gpu=True, num_beams=2, sub_victim_compare=False):
     """
     evaluation function
     """
@@ -1369,7 +1443,8 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
             if eval_feature[
                 'task'] == 'perpetrator_type':
                 if 'perpetrator_type' not in fusion_flag_checker[
-                    example_id]:
+                    example_id] or (num_beams > 1 and pre_score >
+                                    fusion_flag_checker[example_id]['perpetrator_type']):
 
                     sys_predictions[example_id][
                         'perpetrator_type'] = pre_answer.strip()
@@ -1378,7 +1453,8 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                             'perpetrator_type'] = pre_score
             if eval_feature['task'] == 'city':
                 if 'city' not in fusion_flag_checker[
-                    example_id]:
+                    example_id] or (num_beams > 1 and pre_score >
+                                    fusion_flag_checker[example_id]['city']):
 
                     sys_predictions[example_id]['city'] = pre_answer.strip()
                     if num_beams > 1:
@@ -1386,7 +1462,8 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
 
             if eval_feature['task'] == 'region':
                 if 'region' not in fusion_flag_checker[
-                    example_id]:
+                    example_id] or (num_beams > 1 and pre_score >
+                                    fusion_flag_checker[example_id]['region']):
 
                     sys_predictions[example_id]['region'] = pre_answer.strip()
                     if num_beams > 1:
@@ -1394,26 +1471,33 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
 
             if eval_feature['task'] == 'country':
                 if 'country' not in fusion_flag_checker[
-                    example_id]:
+                    example_id] or (num_beams > 1 and pre_score >
+                                    fusion_flag_checker[example_id]['country']):
 
                     sys_predictions[example_id]['country'] = pre_answer.strip()
                     if num_beams > 1:
                         fusion_flag_checker[example_id]['country'] = pre_score
 
             if eval_feature['task'] == 'date':
-                if 'date' not in fusion_flag_checker[example_id]:
+                if 'date' not in fusion_flag_checker[example_id] or (
+                        num_beams > 1 and pre_score >
+                        fusion_flag_checker[example_id]['date']):
                     sys_predictions[example_id]['date'] = pre_answer.strip()
                     if num_beams > 1:
                         fusion_flag_checker[example_id]['date'] = pre_score
 
             if eval_feature['task'] == 'month':
-                if 'month' not in fusion_flag_checker[example_id]:
+                if 'month' not in fusion_flag_checker[example_id] or (
+                        num_beams > 1 and pre_score >
+                        fusion_flag_checker[example_id]['month']):
                     sys_predictions[example_id]['month'] = pre_answer.strip()
                     if num_beams > 1:
                         fusion_flag_checker[example_id]['month'] = pre_score
 
             if eval_feature['task'] == 'year':
-                if 'year' not in fusion_flag_checker[example_id]:
+                if 'year' not in fusion_flag_checker[example_id] or (
+                        num_beams > 1 and pre_score >
+                        fusion_flag_checker[example_id]['year']):
                     sys_predictions[example_id]['year'] = pre_answer.strip()
                     if num_beams > 1:
                         fusion_flag_checker[example_id]['year'] = pre_score
@@ -1444,24 +1528,50 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
             # TODO implement confidence score based knowledge fusion
             #  for victim attributes
             if eval_feature['task'] == 'victim_age':
+                if sub_victim_compare and not eval_feature['sub_victim']:
+                    continue
                 cur_victim_name = eval_feature['victim']
                 if cur_victim_name not in sys_victims_dic[example_id]:
                     sys_victims_dic[example_id][cur_victim_name] = {}
-                sys_victims_dic[example_id][cur_victim_name][
-                    'age'] = pre_answer.strip()
+                    fusion_flag_checker[example_id][cur_victim_name] = {}
+                if 'age' not in fusion_flag_checker[example_id][
+                        cur_victim_name] or (
+                            num_beams > 1 and pre_score >
+                            fusion_flag_checker[example_id][cur_victim_name][
+                                'age']):
+                    sys_victims_dic[example_id][cur_victim_name][
+                        'age'] = pre_answer.strip()
             if eval_feature['task'] == 'victim_population_type':
+                if sub_victim_compare and not eval_feature['sub_victim']:
+                    continue
                 cur_victim_name = eval_feature['victim']
                 if cur_victim_name not in sys_victims_dic[example_id]:
                     sys_victims_dic[example_id][cur_victim_name] = {}
-                sys_victims_dic[example_id][cur_victim_name][
-                    'population'] = pre_answer.strip()
+                    fusion_flag_checker[example_id][cur_victim_name] = {}
+                if 'population' not in fusion_flag_checker[example_id][
+                        cur_victim_name] or (
+                            num_beams > 1 and pre_score >
+                            fusion_flag_checker[example_id][cur_victim_name][
+                                'population']):
+                    sys_victims_dic[example_id][cur_victim_name][
+                        'population'] = pre_answer.strip()
             if eval_feature['task'] == 'victim_sex_type':
+                if sub_victim_compare and not eval_feature['sub_victim']:
+                    continue
                 cur_victim_name = eval_feature['victim']
                 if cur_victim_name not in sys_victims_dic[example_id]:
                     sys_victims_dic[example_id][cur_victim_name] = {}
-                sys_victims_dic[example_id][cur_victim_name][
-                    'sex'] = pre_answer.strip()
+                    fusion_flag_checker[example_id][cur_victim_name] = {}
+                if 'sex' not in	fusion_flag_checker[example_id][
+                        cur_victim_name] or (
+                            num_beams > 1 and pre_score >
+                            fusion_flag_checker[example_id][cur_victim_name][
+                                'sex']):
+                    sys_victims_dic[example_id][cur_victim_name][
+                        'sex'] = pre_answer.strip()
             if eval_feature['task'] == 'victim_type':
+                if sub_victim_compare and not eval_feature['sub_victim']:
+                    continue
                 cur_victim_name = eval_feature['victim']
                 cur_victim_type = eval_feature['victim_type']
                 if cur_victim_name not in sys_victims_dic[example_id]:
@@ -1475,6 +1585,7 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
 
             if eval_feature['task'] == 'violation_types':
                 cur_violation_type = eval_feature['violation type']
+                fusion_flag_checker[example_id][cur_victim_name] = {}
                 if pre_answer.strip() == 'yes':
                     # and cur_violation_type not in flag_cache[example_id]:
                     sys_predictions[example_id]['violation_types'].add(
@@ -1483,7 +1594,11 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                     cur_violation_type] = pre_answer.strip()
             all_num += 1
 
-    all_victim_count = 0
+    all_victim_count_age = 0
+    all_victim_count_population = 0
+    all_victim_count_sex = 0
+    all_victim_count_type = 0
+    
     correct_age = 0
     correct_population = 0
     correct_sex = 0
@@ -1634,6 +1749,30 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
         for victim in victims_gold:
             if victim not in victims_sys:
                 continue
+            
+            if 'age' in victims_gold[victim] and 'age' in victims_sys[victim]:
+                all_victim_count_age += 1
+                if victims_gold[victim]['age'] == victims_sys[victim]['age']:
+                    correct_age += 1
+            if 'population' in victims_gold[victim] and 'population' in \
+                    victims_sys[victim]:
+                all_victim_count_population += 1
+                if victims_gold[victim]['population'] == victims_sys[victim][
+                    'population']:
+                    correct_population += 1
+            if 'sex' in victims_gold[victim] and 'sex' in victims_sys[victim]:
+                all_victim_count_sex += 1
+                if victims_gold[victim]['sex'] == victims_sys[victim]['sex']:
+                    correct_sex += 1
+            if 'type' in victims_gold[victim] and 'type' in victims_sys[
+                victim]:
+                all_victim_count_type += 1
+                if len(victims_sys[victim]['type']) == 0:
+                    victims_sys[victim]['type'] = set(
+                        ['insufficient information'])
+                if victims_gold[victim]['type'] == victims_sys[victim]['type']:
+                    correct_type += 1
+            '''        
             all_victim_count += 1
             if victims_gold[victim]['age'] == victims_sys[victim]['age']:
                 correct_age += 1
@@ -1646,7 +1785,7 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                 victims_sys[victim]['type'] = set(['insufficient information'])
             if victims_gold[victim]['type'] == victims_sys[victim]['type']:
                 correct_type += 1
-
+            '''
             outputs_victims.append(
                 '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (
                     text.replace('\n', ' '), victim,
@@ -1703,10 +1842,10 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
         f1_perpetrator = 2 * p_perpetrator * r_perpetrator / (
                 p_perpetrator + r_perpetrator)
 
-    age_acc = correct_age / all_victim_count
-    population_acc = correct_population / all_victim_count
-    sex_acc = correct_sex / all_victim_count
-    type_acc = correct_type / all_victim_count
+    age_acc = correct_age / all_victim_count_age
+    population_acc = correct_population / all_victim_count_population
+    sex_acc = correct_sex / all_victim_count_sex
+    type_acc = correct_type / all_victim_count_type
     city_acc = correct_city / len(gold_predictions)
     region_acc = correct_region / len(gold_predictions)
     country_acc = correct_country / len(gold_predictions)
