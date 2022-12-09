@@ -276,14 +276,14 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
             input_ids, input_masks, truncated_text_1 = \
                 input_ids_generate(context, question, task_prefix, tokenizer,
                                    max_len=max_len, add_prefix=add_prefix)
-            if replicate or hybrid:
-                _, _, truncated_text_raw = input_ids_generate(
-                    raw_context,
-                    question,
-                    task_prefix,
-                    tokenizer,
-                    max_len=max_len,
-                    add_prefix=add_prefix)
+            
+            _, _, truncated_text_raw = input_ids_generate(
+                raw_context,
+                question,
+                task_prefix,
+                tokenizer,
+                max_len=max_len,
+                add_prefix=add_prefix)
 
             if perpetrator_mention:
                 answer = 'yes </s>'
