@@ -394,7 +394,7 @@ def generate_features_t5(examples, tokenizer, add_prefix=False,
                 if victim[0] and victim[0] in tmp_truncated_text:
                     victim_name = victim[0]
 
-                    if victim[0] in tmp_truncated_text_victim_sex:
+                    if victim[0] in truncated_text_raw:
                         sub_victim = True
                     else:
                         sub_victim = False
