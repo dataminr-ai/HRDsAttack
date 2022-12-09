@@ -47,7 +47,8 @@ if __name__ == "__main__":
                         help='replicate the reported scores')
     parser.add_argument('--fusion', action='store_true',
                         help='use paragraph-based fusion or not')
-
+    parser.add_argument('--hybrid', action='store_true',
+                        help='use hybrid model for evaluation')
     args = parser.parse_args()
 
     model_class = T5ForConditionalGeneration
@@ -67,7 +68,8 @@ if __name__ == "__main__":
                                              max_len=512,
                                              context_filter=args.context_filter,
                                              split_doc=True, top_sentence=None,
-                                             replicate=args.replicate)
+                                             replicate=args.replicate,
+                                             hybrid=args.hybrid)
     else:
         test_examples = load_examples(args.test_file)
         test_features = generate_features_t5(test_examples, tokenizer,

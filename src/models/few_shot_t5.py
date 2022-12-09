@@ -96,6 +96,8 @@ if __name__ == "__main__":
                         help='filter context')
     parser.add_argument('--replicate', action='store_true',
                         help='replicate the reported scores')
+    parser.add_argument('--hybrid', action='store_true',
+                        help='evaluate hybrid model on dev set')
     args = parser.parse_args()
 
     # set up run name for MLflow
@@ -155,7 +157,8 @@ if __name__ == "__main__":
                                          max_len=512,
                                          context_filter=args.context_filter,
                                          split_doc=True, top_sentence=None,
-                                         replicate=args.replicate)
+                                         replicate=args.replicate,
+                                         hybrid=args.hybrid)
 
     train_dataset = generate_dataset_t5(train_features)
     dev_dataset = generate_dataset_t5(dev_features)
