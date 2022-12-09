@@ -1774,6 +1774,8 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                 all_victim_count_sex += 1
                 if victims_gold[victim]['sex'] == victims_sys[victim]['sex']:
                     correct_sex += 1
+            else:
+                victims_sys[victim]['sex'] = None
             if 'type' in victims_gold[victim] and 'type' in victims_sys[
                 victim]:
                 all_victim_count_type += 1
