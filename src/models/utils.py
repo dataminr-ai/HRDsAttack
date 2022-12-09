@@ -1534,6 +1534,7 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                 if cur_victim_name not in sys_victims_dic[example_id]:
                     sys_victims_dic[example_id][cur_victim_name] = {}
                     fusion_flag_checker[example_id][cur_victim_name] = {}
+                    
                 if 'age' not in fusion_flag_checker[example_id][
                         cur_victim_name] or (
                             num_beams > 1 and pre_score >
@@ -1541,6 +1542,9 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                                 'age']):
                     sys_victims_dic[example_id][cur_victim_name][
                         'age'] = pre_answer.strip()
+                    if num_beams > 1:
+                        fusion_flag_checker[example_id][cur_victim_name][
+                            'age'] = pre_score
             if eval_feature['task'] == 'victim_population_type':
                 if sub_victim_compare and not eval_feature['sub_victim']:
                     continue
@@ -1555,6 +1559,9 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                                 'population']):
                     sys_victims_dic[example_id][cur_victim_name][
                         'population'] = pre_answer.strip()
+                    if num_beams > 1:
+                        fusion_flag_checker[example_id][cur_victim_name][
+                            'population'] = pre_score
             if eval_feature['task'] == 'victim_sex_type':
                 if sub_victim_compare and not eval_feature['sub_victim']:
                     continue
@@ -1569,6 +1576,9 @@ def evaluate_all(dataloader, examples, features, tokenizer, model,
                                 'sex']):
                     sys_victims_dic[example_id][cur_victim_name][
                         'sex'] = pre_answer.strip()
+                    if num_beams > 1:
+                        fusion_flag_checker[example_id][cur_victim_name][
+                            'sex'] = pre_score
             if eval_feature['task'] == 'victim_type':
                 if sub_victim_compare and not eval_feature['sub_victim']:
                     continue
