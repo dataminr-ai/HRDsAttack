@@ -1,5 +1,5 @@
 # A New Task and Dataset on Detecting Attacks on Human Rights Defenders
-This repo contains dataset proposed in our paper [BUMP: A Benchmark of Unfaithful Minimal Pairs for Meta-Evaluation of Faithfulness Metrics](PlaceholderLink), along with the code to train and evaluate the proposed baseline models.
+This repo contains dataset proposed in our paper [A New Task and Dataset on Detecting Attacks on Human Rights Defenders](PlaceholderLink), along with the code to train and evaluate the proposed baseline models.
 
 # Requirements
 Install the dependencies:
