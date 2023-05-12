@@ -1,5 +1,5 @@
-# UN-OHCHR-Event-Extraction
-The code to train and evaluate the model on Human Rights Defenders dataset.
+# A New Task and Dataset on Detecting Attacks on Human Rights Defenders
+This repo contains dataset proposed in our paper [A New Task and Dataset on Detecting Attacks on Human Rights Defenders](PlaceholderLink), along with the code to train and evaluate the proposed baseline models.
 
 # Requirements
 Install the dependencies:
