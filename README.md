@@ -1,19 +1,20 @@
 # A New Task and Dataset on Detecting Attacks on Human Rights Defenders
 This repo contains dataset proposed in our paper [A New Task and Dataset on Detecting Attacks on Human Rights Defenders](PlaceholderLink), along with the code to train and evaluate the proposed baseline models.
 
-# Requirements
-Install the dependencies:
 
-- `python3.8+`
-- `pip3 install -r requirements.txt`
 
-Download the Spacy English model:
-```
-python -m spacy download en_core_web_sm
-```
+## Dataset
 
-# Data
-All samples in the training and dev set are news articles with annotated attributes regarding attacking events to Human-Right Defenders (or similar populations). Each field in the JSON files and its corresponding descriptions are listed in the table below:
+### Labeling Ontology
+The table below shows the complete labeling ontology of our proposed dataset HRDsAttack.
+![](figures/hrd_ontology.png)
+
+### Label Statistics
+The table below shows the label distributions of our proposed dataset HRDsAttack.
+![](figures/hrd_stats.png)
+
+## Data Structure
+All samples in the dataset are news articles with annotated attributes regarding attacking events to Human-Right Defenders (or similar populations). Each field in the JSON files and its corresponding descriptions are listed in the table below:
 
 |Name|Description|Example|
 |---|---|---|
@@ -46,7 +47,23 @@ All samples in the training and dev set are news articles with annotated attribu
 |victim_sex_type|A string representing the sex of the victim|'male'|
 |victim_age_group|A string representing the age group of the victim|'adult'|
 
-# Training
+
+## Modeling
+The figure below shows the overall framework of our proposed baseline model:
+![](figures/t5_workflow.png)
+
+### Requirements
+Install the dependencies:
+
+- `python3.8+`
+- `pip3 install -r requirements.txt`
+
+Download the Spacy English model:
+```
+python -m spacy download en_core_web_sm
+```
+
+### Training
 All of the experiments were conducted on a single AWS g5.xlarge	machine, which is based on a NVIDIA A10G GPU. To train the model on different machines, the batch size should be modified to fit the GPU memory size.
 ```
 python src/models/few_shot_t5.py \
@@ -67,7 +84,7 @@ python src/models/few_shot_t5.py \
        --use_metric \
        --replicate
 ```
-# Evaluation
+### Evaluation
 For evaluation with paragraph-based fusion for all classes
 ```
 python src/models/evaluate.py \
@@ -107,23 +124,14 @@ python src/models/evaluate.py \
        --replicate
 ```
 
-# Results
-Here we report the evaluation results on the dev set for comparison against our Finetune experiment.
+### Results
+The table below shows the overall performance of the baseline models on HRDsAttack test set (%) (All experiments are based on a single run with a preset random seed).
 
-|Class|Metric|Off-the-Shelf|Finetune|Prefix w/o Fusion|Prefix w/ Fusion|Prefix Hybrid|
-|---|---|:---:|:---:|:---:|:---:|:---:|
-|Perpetrator Mention|F1|45.90%|95.14%|96.88%|**97.38%**|**97.38%**|
-|Perpetrator Type|Accuracy|34.00%|45.00%|**52.00%**|47.00%|**52.00%***|
-|Victim Name|Fuzzy Match F1|29.69%|47.66%|57.47%|**69.23%**|**69.23%**|
-|Victim Type|Accuracy|-|76.39%|82.86%|**83.17%**|**83.17%**|
-|Victim Sex Type|Accuracy|-|87.50%|**90.00%**|87.13%|**90.00%***|
-|Victim Age Group|Accuracy|-|86.11%|87.14%|**89.11%**|**89.11%**|
-|Violation Type|F1|-|-|64.62%|**78.40%**|**78.40%**|
-|Country|Accuracy|-|54.00%|**59.00%**|52.00%|**59.00%***|
-|Region|Accuracy|-|19.00%|**24.00%**|8.00%|**24.00%***|
-|City|Accuracy|-|41.00%|**43.00%**|40.00%|**43.00%***|
-|Year|Accuracy|-|**74.00%**|71.00%|68.00%|71.00%*|
-|Month|Accuracy|-|50.00%|**52.00%**|47.00%|**52.00%***|
-|Day|Accuracy|-|22.00%|**27.00%**|25.00%|**27.00%***|
+![](figures/test_results.png)
 
-*: Fusion not applied.
+## Citation:
+If you find our dataset or code in this repo helpful, please cite [our paper](PlaceholderLink):
+```bibtex
+placeholder
+
+```
