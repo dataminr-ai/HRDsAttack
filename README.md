@@ -1,5 +1,5 @@
 # A New Task and Dataset on Detecting Attacks on Human Rights Defenders
-This repo contains dataset proposed in our paper [A New Task and Dataset on Detecting Attacks on Human Rights Defenders](PlaceholderLink), along with the code to train and evaluate the proposed baseline models.
+This repo contains dataset proposed in our paper [A New Task and Dataset on Detecting Attacks on Human Rights Defenders](https://arxiv.org/abs/2306.17695), along with the code to train and evaluate the proposed baseline models.
 
 
 
@@ -130,8 +130,12 @@ The table below shows the overall performance of the baseline models on HRDsAtta
 ![](figures/test_results.png)
 
 ## Citation:
-If you find our dataset or code in this repo helpful, please cite [our paper](PlaceholderLink):
+If you find our dataset or code in this repo helpful, please cite [our paper](https://arxiv.org/abs/2306.17695):
 ```bibtex
-placeholder
-
+@article{ran2023new,
+  title={A New Task and Dataset on Detecting Attacks on Human Rights Defenders},
+  author={Ran, Shihao and Lu, Di and Tetreault, Joel and Cahill, Aoife and Jaimes, Alejandro},
+  journal={arXiv preprint arXiv:2306.17695},
+  year={2023}
+}
 ```
